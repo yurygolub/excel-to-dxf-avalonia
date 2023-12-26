@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 
 namespace ExcelToDxfAvalonia
 {
@@ -6,7 +6,7 @@ namespace ExcelToDxfAvalonia
     {
         public MainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }
