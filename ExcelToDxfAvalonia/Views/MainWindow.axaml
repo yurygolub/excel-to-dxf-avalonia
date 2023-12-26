@@ -5,9 +5,15 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="ExcelToDxfAvalonia.Views.MainWindow"
         Title="ExcelToDxfAvalonia">
+
+    <Window.KeyBindings>
+        <KeyBinding Gesture="Ctrl+Q"
+                    Command="{Binding SwitchConsoleVisibility}"/>
+    </Window.KeyBindings>
+
     <Grid>
-        <Button IsEnabled="True" Command="{Binding TestButton}">
-            Test button
+        <Button Command="{Binding OpenFileAsync}">
+            Open file
         </Button>
     </Grid>
 </Window>
