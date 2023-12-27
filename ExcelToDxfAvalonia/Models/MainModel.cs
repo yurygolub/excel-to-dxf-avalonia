@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using ExcelDataReader;
@@ -40,19 +42,20 @@ public class MainModel
 
         Console.OutputEncoding = Encoding.UTF8;
 
-        foreach (DataTable table in result.Tables)
+        DataTable table = result.Tables.Cast<DataTable>().First();
+        DataRow[] rows = table.Rows.Cast<DataRow>().Skip(4).ToArray();
+        var products = new List<ProductInformation>();
+
+        for (int i = 0; i < rows.Length; i += 5)
         {
-            foreach (DataRow row in table.Rows)
+            DataRow row = rows[i];
+            products.Add(new ProductInformation
             {
-                foreach (var item in row.ItemArray)
-                {
-                    Console.Write($"{item}  ");
-                }
-
-                Console.WriteLine();
-            }
-
-            Console.WriteLine("====================");
+                ProductType = row[2].ToString(),
+                Notes = row[14].ToString(),
+                ExternalWidth = row[15].ToString(),
+                Length = row[16].ToString(),
+            });
         }
     }
 }
