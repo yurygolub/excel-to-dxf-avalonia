@@ -1,0 +1,45 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="ExcelToDxfAvalonia.Views.AboutView"
+        Name="AboutViewControl"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen"
+        Title="About"
+        Height="150" Width="300">
+    
+    <Window.KeyBindings>
+        <KeyBinding Gesture="Escape"
+                    Command="{Binding Close, ElementName=AboutViewControl}"/>
+    </Window.KeyBindings>
+    
+    <StackPanel VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+            <TextBlock Padding="5" Margin="10">
+                Version:
+            </TextBlock>
+
+            <TextBox Text="{Binding Version, Mode=OneWay}"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     IsReadOnly="True"
+                     Padding="5" Margin="10"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+            <TextBlock Padding="5" Margin="10">
+                Build date:
+            </TextBlock>
+            
+            <TextBox Text="{Binding BuildDate, Mode=OneWay}"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     IsReadOnly="True"
+                     Padding="5" Margin="10"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

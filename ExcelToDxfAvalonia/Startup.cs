@@ -21,6 +21,8 @@ public class Startup
             .AddSingleton<MainWindow>()
             .AddSingleton<MainViewModel>()
             .AddSingleton<MainModel>()
+            .AddTransient<AboutView>()
+            .AddSingleton<AboutViewModel>()
             .AddLogging(builder => builder.AddNLog(this.Configuration));
     }
 }

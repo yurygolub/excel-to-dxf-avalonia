@@ -8,18 +8,24 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 using ExcelToDxfAvalonia.Models;
+using ExcelToDxfAvalonia.Views;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ExcelToDxfAvalonia.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {
     private readonly MainModel model;
+    private readonly IServiceProvider serviceProvider;
+
+    private AboutView aboutView;
 
     private string inFilePath;
 
-    public MainViewModel(MainModel model)
+    public MainViewModel(MainModel model, IServiceProvider serviceProvider)
     {
         this.model = model ?? throw new ArgumentNullException(nameof(model));
+        this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
     }
 
     public ReadOnlyObservableCollection<ProductInformation> ProductInfoCollection => this.model.ProductInfoPublicCollection;
@@ -44,6 +50,21 @@ public class MainViewModel : ViewModelBase
         }
 
         this.model.ReadExcelFile(this.inFilePath);
+    }
+
+    public void OpenAboutWindow()
+    {
+        if (this.aboutView is null)
+        {
+            MainWindow ownerWindow = this.serviceProvider.GetRequiredService<MainWindow>();
+            this.aboutView = this.serviceProvider.GetRequiredService<AboutView>();
+            this.aboutView.Closed += (o, e) =>
+            {
+                this.aboutView = null;
+            };
+
+            this.aboutView.ShowDialog(ownerWindow);
+        }
     }
 
     private async Task<bool> OpenFileAsync(string title, List<FilePickerFileType> filters)

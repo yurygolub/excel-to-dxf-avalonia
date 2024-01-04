@@ -5,6 +5,8 @@
         <SatelliteResourceLanguages>ru</SatelliteResourceLanguages>
         <CodeAnalysisRuleSet>..\code-analysis.ruleset</CodeAnalysisRuleSet>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <Deterministic>false</Deterministic>
+        <AssemblyVersion>0.0.*</AssemblyVersion>
     </PropertyGroup>
 
     <ItemGroup>

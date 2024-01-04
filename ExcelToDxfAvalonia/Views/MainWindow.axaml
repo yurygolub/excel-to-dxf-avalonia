@@ -52,6 +52,15 @@
                 <DataGridTextColumn Header="ProductType"
                                     Binding="{Binding ProductType}"/>
 
+                <DataGridTextColumn Header="Length"
+                                    Binding="{Binding Length}"/>
+
+                <DataGridTextColumn Header="ExternalWidth"
+                                    Binding="{Binding ExternalWidth}"/>
+
+                <DataGridTextColumn Header="InternalWidth"
+                                    Binding="{Binding InternalWidth}"/>
+
                 <DataGridTextColumn Header="Notes"
                                     Binding="{Binding Notes}"/>
             </DataGrid.Columns>
