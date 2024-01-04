@@ -11,9 +11,50 @@
                     Command="{Binding SwitchConsoleVisibility}"/>
     </Window.KeyBindings>
 
+    <Window.Styles>
+        <Style Selector="DataGridColumnHeader">
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+    </Window.Styles>
+
     <Grid>
-        <Button Command="{Binding OpenFileAsync}">
-            Open file
-        </Button>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0">
+            <MenuItem Header="Open file"
+                      Command="{Binding OpenFileAsync}">
+            </MenuItem>
+
+            <MenuItem Header="Export to dxf"
+                      Command="{Binding ExportToDxfAsync}">
+            </MenuItem>
+
+            <MenuItem Header="About"
+                      Command="{Binding OpenAboutWindow}">
+            </MenuItem>
+        </Menu>
+
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding ProductInfoCollection}"
+                  GridLinesVisibility="All"
+                  AutoGenerateColumns="False"
+                  HorizontalGridLinesBrush="Black"
+                  HorizontalScrollBarVisibility="Visible"
+                  VerticalGridLinesBrush="Black"
+                  VerticalScrollBarVisibility="Visible"
+                  BorderBrush="Black"
+                  BorderThickness="1"
+                  IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ProductType"
+                                    Binding="{Binding ProductType}"/>
+
+                <DataGridTextColumn Header="Notes"
+                                    Binding="{Binding Notes}"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>

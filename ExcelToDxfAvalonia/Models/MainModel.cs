@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -12,6 +13,15 @@ namespace ExcelToDxfAvalonia.Models;
 
 public class MainModel
 {
+    private readonly ObservableRangeCollection<ProductInformation> productInfoCollection = new ();
+
+    public MainModel()
+    {
+        this.ProductInfoPublicCollection = new ReadOnlyObservableCollection<ProductInformation>(this.productInfoCollection);
+    }
+
+    public ReadOnlyObservableCollection<ProductInformation> ProductInfoPublicCollection { get; }
+
     public static void SwitchConsoleVisibility()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -57,5 +67,7 @@ public class MainModel
                 Length = row[16].ToString(),
             });
         }
+
+        this.productInfoCollection.AddRange(products);
     }
 }

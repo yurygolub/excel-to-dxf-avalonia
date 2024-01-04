@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia;
@@ -20,6 +21,8 @@ public class MainViewModel : ViewModelBase
     {
         this.model = model ?? throw new ArgumentNullException(nameof(model));
     }
+
+    public ReadOnlyObservableCollection<ProductInformation> ProductInfoCollection => this.model.ProductInfoPublicCollection;
 
     public string FileName { get; set; }
 
