@@ -59,10 +59,21 @@ public class MainModel
         for (int i = 0; i < rows.Length; i += 5)
         {
             DataRow row = rows[i];
+
+            string productType = row[2].ToString();
+            if (string.IsNullOrWhiteSpace(productType))
+            {
+                continue;
+            }
+
+            string notes = row[14].ToString()
+                .Split('*')
+                .Aggregate(new StringBuilder(), (acc, i) => acc.AppendLine(i)).ToString();
+
             products.Add(new ProductInformation
             {
-                ProductType = row[2].ToString(),
-                Notes = row[14].ToString(),
+                ProductType = productType,
+                Notes = notes,
                 ExternalWidth = row[15].ToString(),
                 Length = row[16].ToString(),
             });
