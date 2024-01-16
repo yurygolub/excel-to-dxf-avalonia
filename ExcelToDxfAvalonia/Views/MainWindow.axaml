@@ -52,6 +52,15 @@
                 <DataGridTextColumn Header="ProductType"
                                     Binding="{Binding ProductType}"/>
 
+                <DataGridTextColumn Header="Quarter"
+                                    Binding="{Binding Quarter}"/>
+
+                <DataGridTextColumn Header="DoorHingeType"
+                                    Binding="{Binding DoorHingeType}"/>
+
+                <DataGridTextColumn Header="DoorLockType"
+                                    Binding="{Binding DoorLockType}"/>
+
                 <DataGridTextColumn Header="Length"
                                     Binding="{Binding Length}"/>
 

@@ -66,14 +66,15 @@ public class MainModel
                 continue;
             }
 
-            string notes = row[14].ToString()
-                .Split('*')
-                .Aggregate(new StringBuilder(), (acc, i) => acc.AppendLine(i)).ToString();
+            string[] notes = row[14].ToString().Split('*');
 
             products.Add(new ProductInformation
             {
                 ProductType = productType,
-                Notes = notes,
+                Quarter = notes[2],
+                DoorHingeType = notes[7],
+                DoorLockType = notes[8],
+                Notes = notes.Aggregate(new StringBuilder(), (acc, i) => acc.AppendLine(i)).ToString(),
                 ExternalWidth = row[15].ToString(),
                 Length = row[16].ToString(),
             });
