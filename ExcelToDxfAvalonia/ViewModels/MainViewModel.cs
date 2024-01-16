@@ -44,7 +44,7 @@ public class MainViewModel : ViewModelBase
             },
         };
 
-        if (!await this.OpenFileAsync("Open CanHelper log file", filters))
+        if (!await this.OpenFileAsync("Open excel file", filters))
         {
             return;
         }

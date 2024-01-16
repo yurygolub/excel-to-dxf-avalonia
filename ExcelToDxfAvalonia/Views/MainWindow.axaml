@@ -69,9 +69,6 @@
 
                 <DataGridTextColumn Header="InternalWidth"
                                     Binding="{Binding InternalWidth}"/>
-
-                <DataGridTextColumn Header="Notes"
-                                    Binding="{Binding Notes}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

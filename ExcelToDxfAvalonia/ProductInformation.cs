@@ -20,6 +20,6 @@ public class ProductInformation
 
     public override string ToString()
     {
-        return $"{this.ProductType} {this.Notes}";
+        return $"{this.ProductType} {this.Quarter} {this.DoorHingeType} {this.DoorLockType}";
     }
 }

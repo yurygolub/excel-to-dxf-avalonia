@@ -56,9 +56,10 @@ public class MainModel
         DataRow[] rows = table.Rows.Cast<DataRow>().Skip(4).ToArray();
         var products = new List<ProductInformation>();
 
-        for (int i = 0; i < rows.Length; i += 5)
+        for (int i = 0; i < rows.Length - 1; i += 5)
         {
             DataRow row = rows[i];
+            DataRow nextRow = rows[i + 1];
 
             string productType = row[2].ToString();
             if (string.IsNullOrWhiteSpace(productType))
@@ -76,10 +77,12 @@ public class MainModel
                 DoorLockType = notes[8],
                 Notes = notes.Aggregate(new StringBuilder(), (acc, i) => acc.AppendLine(i)).ToString(),
                 ExternalWidth = row[15].ToString(),
+                InternalWidth = nextRow[15].ToString(),
                 Length = row[16].ToString(),
             });
         }
 
+        this.productInfoCollection.Clear();
         this.productInfoCollection.AddRange(products);
     }
 }
