@@ -10,6 +10,7 @@ using Avalonia.Platform.Storage;
 using ExcelToDxfAvalonia.Models;
 using ExcelToDxfAvalonia.Views;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace ExcelToDxfAvalonia.ViewModels;
 
@@ -17,15 +18,17 @@ public class MainViewModel : ViewModelBase
 {
     private readonly MainModel model;
     private readonly IServiceProvider serviceProvider;
+    private readonly ILogger<MainViewModel> logger;
 
     private AboutView aboutView;
 
     private string inFilePath;
 
-    public MainViewModel(MainModel model, IServiceProvider serviceProvider)
+    public MainViewModel(MainModel model, IServiceProvider serviceProvider, ILogger<MainViewModel> logger)
     {
         this.model = model ?? throw new ArgumentNullException(nameof(model));
         this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public ReadOnlyObservableCollection<ProductInformation> ProductInfoCollection => this.model.ProductInfoPublicCollection;
@@ -49,7 +52,14 @@ public class MainViewModel : ViewModelBase
             return;
         }
 
-        this.model.ReadExcelFile(this.inFilePath);
+        try
+        {
+            this.model.ReadExcelFile(this.inFilePath);
+        }
+        catch (Exception ex)
+        {
+            this.logger.LogError(ex, "Unhandled exception:");
+        }
     }
 
     public void OpenAboutWindow()
