@@ -4,6 +4,12 @@ public class ProductInformation
 {
     public string ProductType { get; set; }
 
+    public string Quarter { get; set; }
+
+    public string DoorHingeType { get; set; }
+
+    public string DoorLockType { get; set; }
+
     public string Length { get; set; }
 
     public string ExternalWidth { get; set; }
@@ -14,6 +20,6 @@ public class ProductInformation
 
     public override string ToString()
     {
-        return $"{this.ProductType} {this.Notes}";
+        return $"{this.ProductType} {this.Quarter} {this.DoorHingeType} {this.DoorLockType}";
     }
 }

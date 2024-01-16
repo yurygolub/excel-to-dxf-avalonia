@@ -4,6 +4,7 @@ using ExcelToDxfAvalonia.ViewModels;
 using ExcelToDxfAvalonia.Views;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 
 namespace ExcelToDxfAvalonia;
@@ -23,6 +24,8 @@ public class Startup
             .AddSingleton<MainModel>()
             .AddTransient<AboutView>()
             .AddSingleton<AboutViewModel>()
-            .AddLogging(builder => builder.AddNLog(this.Configuration));
+            .AddLogging(builder => builder
+                .AddConsole()
+                .AddNLog(this.Configuration));
     }
 }

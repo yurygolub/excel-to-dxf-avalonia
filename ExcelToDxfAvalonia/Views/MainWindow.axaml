@@ -9,6 +9,8 @@
     <Window.KeyBindings>
         <KeyBinding Gesture="Ctrl+Q"
                     Command="{Binding SwitchConsoleVisibility}"/>
+        <KeyBinding Gesture="Ctrl+O"
+                    Command="{Binding OpenFileAsync}"/>
     </Window.KeyBindings>
 
     <Window.Styles>
@@ -24,15 +26,15 @@
         </Grid.RowDefinitions>
 
         <Menu Grid.Row="0">
-            <MenuItem Header="Open file"
+            <MenuItem Header="Открыть файл"
                       Command="{Binding OpenFileAsync}">
             </MenuItem>
 
-            <MenuItem Header="Export to dxf"
+            <MenuItem Header="Экспорт в dxf"
                       Command="{Binding ExportToDxfAsync}">
             </MenuItem>
 
-            <MenuItem Header="About"
+            <MenuItem Header="Версия"
                       Command="{Binding OpenAboutWindow}">
             </MenuItem>
         </Menu>
@@ -49,20 +51,26 @@
                   BorderThickness="1"
                   IsReadOnly="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ProductType"
+                <DataGridTextColumn Header="Тип изделия"
                                     Binding="{Binding ProductType}"/>
 
-                <DataGridTextColumn Header="Length"
+                <DataGridTextColumn Header="Четверть"
+                                    Binding="{Binding Quarter}"/>
+
+                <DataGridTextColumn Header="Тип петли"
+                                    Binding="{Binding DoorHingeType}"/>
+
+                <DataGridTextColumn Header="Тип замка"
+                                    Binding="{Binding DoorLockType}"/>
+
+                <DataGridTextColumn Header="Длина"
                                     Binding="{Binding Length}"/>
 
-                <DataGridTextColumn Header="ExternalWidth"
+                <DataGridTextColumn Header="Внешняя ширина"
                                     Binding="{Binding ExternalWidth}"/>
 
-                <DataGridTextColumn Header="InternalWidth"
+                <DataGridTextColumn Header="Внутренняя ширина"
                                     Binding="{Binding InternalWidth}"/>
-
-                <DataGridTextColumn Header="Notes"
-                                    Binding="{Binding Notes}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
