@@ -8,6 +8,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using ExcelDataReader;
 using ExcelToDxfAvalonia.Extensions;
+using netDxf;
+using netDxf.Entities;
 
 namespace ExcelToDxfAvalonia.Models;
 
@@ -84,5 +86,35 @@ public class MainModel
 
         this.productInfoCollection.Clear();
         this.productInfoCollection.AddRange(products);
+    }
+
+    public void ExportToDxf(string directoryPath)
+    {
+        Directory.CreateDirectory(directoryPath);
+        int counter = 0;
+        foreach (ProductInformation product in this.productInfoCollection)
+        {
+            string filePath = Path.Combine(directoryPath, $"{counter}.dxf");
+            ExportToDxfFile(filePath, product);
+            counter++;
+        }
+
+        static void ExportToDxfFile(string filePath, ProductInformation product)
+        {
+            // create a new document, by default it will create an AutoCad2000 DXF version
+            DxfDocument doc = new DxfDocument();
+
+            int width = 238, length = 2139;
+
+            doc.Entities.Add(new Line(new Vector2(0, 0), new Vector2(0, length)));
+            doc.Entities.Add(new Line(new Vector2(0, 0), new Vector2(width, 0)));
+            doc.Entities.Add(new Line(new Vector2(width, 0), new Vector2(width, length)));
+            doc.Entities.Add(new Line(new Vector2(0, length), new Vector2(width, length)));
+
+            doc.Entities.Add(new Circle(new Vector2(100, 1000), 10));
+            doc.Entities.Add(new Arc(new Vector2(200, 1000), 10, 0, 180));
+
+            doc.Save(filePath);
+        }
     }
 }
