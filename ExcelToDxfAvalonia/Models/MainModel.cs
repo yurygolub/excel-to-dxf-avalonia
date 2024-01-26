@@ -9,6 +9,7 @@ using System.Text;
 using ExcelDataReader;
 using ExcelToDxfAvalonia.Extensions;
 using netDxf;
+using netDxf.Collections;
 using netDxf.Entities;
 
 namespace ExcelToDxfAvalonia.Models;
@@ -94,27 +95,31 @@ public class MainModel
         int counter = 0;
         foreach (ProductInformation product in this.productInfoCollection)
         {
-            string filePath = Path.Combine(directoryPath, $"{counter}.dxf");
+            string filePath = Path.Combine(directoryPath, $"{counter} - {product.ProductType}.dxf");
             ExportToDxfFile(filePath, product);
             counter++;
         }
 
         static void ExportToDxfFile(string filePath, ProductInformation product)
         {
-            // create a new document, by default it will create an AutoCad2000 DXF version
+            const int Distance = 100;
             DxfDocument doc = new DxfDocument();
 
-            int width = 238, length = 2139;
+            int width = int.Parse(product.ExternalWidth);
+            int length = int.Parse(product.Length);
 
-            doc.Entities.Add(new Line(new Vector2(0, 0), new Vector2(0, length)));
-            doc.Entities.Add(new Line(new Vector2(0, 0), new Vector2(width, 0)));
-            doc.Entities.Add(new Line(new Vector2(width, 0), new Vector2(width, length)));
-            doc.Entities.Add(new Line(new Vector2(0, length), new Vector2(width, length)));
-
-            doc.Entities.Add(new Circle(new Vector2(100, 1000), 10));
-            doc.Entities.Add(new Arc(new Vector2(200, 1000), 10, 0, 180));
+            AddRectangle(doc.Entities, new Vector2(0, 0), new Vector2(width, length));
+            AddRectangle(doc.Entities, new Vector2(width + Distance, 0), new Vector2((width * 2) + Distance, length));
 
             doc.Save(filePath);
         }
+    }
+
+    private static void AddRectangle(DrawingEntities entities, Vector2 leftBottom, Vector2 rightUp)
+    {
+        entities.Add(new Line(leftBottom, new Vector2(leftBottom.X, rightUp.Y))); // left
+        entities.Add(new Line(new Vector2(leftBottom.X, rightUp.Y), rightUp)); // up
+        entities.Add(new Line(rightUp, new Vector2(rightUp.X, leftBottom.Y))); // right
+        entities.Add(new Line(new Vector2(rightUp.X, leftBottom.Y), leftBottom)); // bottom
     }
 }
