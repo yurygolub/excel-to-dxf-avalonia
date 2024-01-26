@@ -21,14 +21,20 @@ public class DxfExporter
 
         static void ExportToDxfFile(string filePath, ProductInformation product)
         {
-            const int Distance = 100;
+            const int JambDistance = 200;
+            const int LintelDistance = 100;
             DxfDocument doc = new DxfDocument();
 
-            int width = int.Parse(product.ExternalWidth);
-            int length = int.Parse(product.Length);
+            AddRectangle(doc.Entities, new Vector2(0, 0), new Vector2(product.JambWidth, product.JambLength));
+            AddRectangle(
+                doc.Entities,
+                new Vector2(product.JambWidth + JambDistance, 0),
+                new Vector2((product.JambWidth * 2) + JambDistance, product.JambLength));
 
-            AddRectangle(doc.Entities, new Vector2(0, 0), new Vector2(width, length));
-            AddRectangle(doc.Entities, new Vector2(width + Distance, 0), new Vector2((width * 2) + Distance, length));
+            AddRectangle(
+                doc.Entities,
+                new Vector2(LintelDistance, LintelDistance + product.JambLength),
+                new Vector2(LintelDistance + product.LintelLength, LintelDistance + product.JambLength + product.LintelWidth));
 
             doc.Save(filePath);
         }

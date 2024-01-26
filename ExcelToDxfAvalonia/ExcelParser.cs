@@ -29,18 +29,20 @@ public class ExcelParser
         DataRow[] rows = table.Rows.Cast<DataRow>().Skip(4).ToArray();
         var products = new List<ProductInformation>();
 
-        for (int i = 0; i < rows.Length - 1; i += 5)
+        for (int i = 0; i < rows.Length - 3; i += 5)
         {
-            DataRow row = rows[i];
-            DataRow nextRow = rows[i + 1];
+            DataRow row1 = rows[i];
+            DataRow row2 = rows[i + 1];
+            DataRow row3 = rows[i + 2];
+            DataRow row4 = rows[i + 3];
 
-            string productType = row[2].ToString();
+            string productType = row1[2].ToString();
             if (string.IsNullOrWhiteSpace(productType))
             {
                 continue;
             }
 
-            string[] notes = row[14].ToString().Split('*');
+            string[] notes = row1[14].ToString().Split('*');
 
             products.Add(new ProductInformation
             {
@@ -49,9 +51,14 @@ public class ExcelParser
                 DoorHingeType = notes[7],
                 DoorLockType = notes[8],
                 Notes = notes.Aggregate(new StringBuilder(), (acc, i) => acc.AppendLine(i)).ToString(),
-                ExternalWidth = row[15].ToString(),
-                InternalWidth = nextRow[15].ToString(),
-                Length = row[16].ToString(),
+                JambWidth = (int)(double)row1[15],
+                JambLength = (int)(double)row1[16],
+                InnerJambWidth = (int?)(row2[15] is DBNull ? null : (double?)row2[15]),
+                InnerJambLength = (int?)(row2[16] is DBNull ? null : (double?)row2[16]),
+                LintelWidth = (int)(double)row3[15],
+                LintelLength = (int)(double)row3[16],
+                InnerLintelWidth = (int?)(row4[15] is DBNull ? null : (double?)row4[15]),
+                InnerLintelLength = (int?)(row4[15] is DBNull ? null : (double?)row4[16]),
             });
         }
 
