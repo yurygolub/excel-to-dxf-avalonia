@@ -10,11 +10,21 @@ public class ProductInformation
 
     public string DoorLockType { get; set; }
 
-    public string Length { get; set; }
+    public int JambLength { get; set; }
 
-    public string ExternalWidth { get; set; }
+    public int JambWidth { get; set; }
 
-    public string InternalWidth { get; set; }
+    public int? InnerJambLength { get; set; }
+
+    public int? InnerJambWidth { get; set; }
+
+    public int LintelLength { get; set; }
+
+    public int LintelWidth { get; set; }
+
+    public int? InnerLintelLength { get; set; }
+
+    public int? InnerLintelWidth { get; set; }
 
     public string Notes { get; set; }
 

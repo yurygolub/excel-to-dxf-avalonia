@@ -23,6 +23,7 @@ public class MainViewModel : ViewModelBase
     private AboutView aboutView;
 
     private string inFilePath;
+    private string exportFolderPath;
 
     public MainViewModel(MainModel model, IServiceProvider serviceProvider, ILogger<MainViewModel> logger)
     {
@@ -55,6 +56,23 @@ public class MainViewModel : ViewModelBase
         try
         {
             this.model.ReadExcelFile(this.inFilePath);
+        }
+        catch (Exception ex)
+        {
+            this.logger.LogError(ex, "Unhandled exception:");
+        }
+    }
+
+    public async Task ExportToDxfAsync()
+    {
+        if (!await this.OpenFolderAsync("Open directory"))
+        {
+            return;
+        }
+
+        try
+        {
+            this.model.ExportToDxf(this.exportFolderPath);
         }
         catch (Exception ex)
         {
@@ -103,6 +121,31 @@ public class MainViewModel : ViewModelBase
 
             this.inFilePath = file;
             this.FileName = Path.GetFileName(file);
+            return true;
+        }
+
+        return false;
+    }
+
+    private async Task<bool> OpenFolderAsync(string title)
+    {
+        IReadOnlyList<IStorageFolder> folders = null;
+        if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            TopLevel topLevel = TopLevel.GetTopLevel(desktop.MainWindow);
+
+            folders = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+            {
+                Title = title,
+                AllowMultiple = false,
+            });
+        }
+
+        if (folders?.Count > 0)
+        {
+            string folder = folders[0].Path.LocalPath;
+
+            this.exportFolderPath = folder;
             return true;
         }
 
