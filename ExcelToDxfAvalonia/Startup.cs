@@ -24,6 +24,8 @@ public class Startup
             .AddSingleton<MainModel>()
             .AddTransient<AboutView>()
             .AddSingleton<AboutViewModel>()
+            .AddSingleton<ExcelParser>()
+            .AddSingleton<DxfExporter>()
             .AddLogging(builder => builder
                 .AddConsole()
                 .AddNLog(this.Configuration));
