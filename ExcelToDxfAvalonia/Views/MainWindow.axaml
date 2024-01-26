@@ -63,14 +63,29 @@
                 <DataGridTextColumn Header="Тип замка"
                                     Binding="{Binding DoorLockType}"/>
 
-                <DataGridTextColumn Header="Длина"
-                                    Binding="{Binding Length}"/>
+                <DataGridTextColumn Header="Ширина стоевых"
+                                    Binding="{Binding JambWidth}"/>
 
-                <DataGridTextColumn Header="Внешняя ширина"
-                                    Binding="{Binding ExternalWidth}"/>
+                <DataGridTextColumn Header="Длина стоевых"
+                                    Binding="{Binding JambLength}"/>
 
-                <DataGridTextColumn Header="Внутренняя ширина"
-                                    Binding="{Binding InternalWidth}"/>
+                <DataGridTextColumn Header="Ширина обечайки стоевых"
+                                    Binding="{Binding InnerJambWidth}"/>
+
+                <DataGridTextColumn Header="Длина обечайки стоевых"
+                                    Binding="{Binding InnerJambLength}"/>
+
+                <DataGridTextColumn Header="Ширина перемычки"
+                                    Binding="{Binding LintelWidth}"/>
+
+                <DataGridTextColumn Header="Длина перемычки"
+                                    Binding="{Binding LintelLength}"/>
+
+                <DataGridTextColumn Header="Ширина обечайки перемычки"
+                                    Binding="{Binding InnerLintelWidth}"/>
+
+                <DataGridTextColumn Header="Длина обечайки перемычки"
+                                    Binding="{Binding InnerLintelLength}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
