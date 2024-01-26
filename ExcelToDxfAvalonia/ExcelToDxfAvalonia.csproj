@@ -6,7 +6,7 @@
         <CodeAnalysisRuleSet>..\code-analysis.ruleset</CodeAnalysisRuleSet>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <Deterministic>false</Deterministic>
-        <AssemblyVersion>0.1.*</AssemblyVersion>
+        <AssemblyVersion>0.2.*</AssemblyVersion>
     </PropertyGroup>
 
     <ItemGroup>
