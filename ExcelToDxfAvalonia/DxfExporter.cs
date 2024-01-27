@@ -25,18 +25,65 @@ public class DxfExporter
             const int LintelDistance = 100;
             DxfDocument doc = new DxfDocument();
 
+            // left jamb
             AddRectangle(doc.Entities, new Vector2(0, 0), new Vector2(product.JambWidth, product.JambLength));
+
+            Vector2 leftBottom = new Vector2(product.JambWidth + JambDistance, 0);
+
+            // right jamb
             AddRectangle(
                 doc.Entities,
                 new Vector2(product.JambWidth + JambDistance, 0),
                 new Vector2((product.JambWidth * 2) + JambDistance, product.JambLength));
 
+            // lintel
             AddRectangle(
                 doc.Entities,
                 new Vector2(LintelDistance, LintelDistance + product.JambLength),
                 new Vector2(LintelDistance + product.LintelLength, LintelDistance + product.JambLength + product.LintelWidth));
 
+            AddHinges(doc.Entities, leftBottom, product);
+
             doc.Save(filePath);
+        }
+    }
+
+    private static void AddHinges(DrawingEntities entities, Vector2 leftBottom, ProductInformation product)
+    {
+        switch (product.HingeType)
+        {
+            case HingeType.HingeEB_755:
+                break;
+
+            case HingeType.HingeR_10_102x76:
+                const int BottomOffset = 256;
+                const int FirstUpOffset = 313;
+                const int SecondUpOffset = FirstUpOffset + 500;
+
+                AddHingeR_10_102x76(entities, new Vector2(leftBottom.X, leftBottom.Y + BottomOffset));
+                AddHingeR_10_102x76(entities, new Vector2(leftBottom.X, leftBottom.Y + product.JambLength - SecondUpOffset));
+                AddHingeR_10_102x76(entities, new Vector2(leftBottom.X, leftBottom.Y + product.JambLength - FirstUpOffset));
+                break;
+
+            case HingeType.Hinge4BB_R14:
+                break;
+
+            case HingeType.HingeOTLAV_30x120:
+                break;
+
+            default:
+                break;
+        }
+
+        static void AddHingeR_10_102x76(DrawingEntities entities, Vector2 leftCenter)
+        {
+            const double Width = 29.6;
+            const double Length = 102.5;
+            const double LeftOffset = 50;
+
+            Vector2 hingeLeftBottom = new Vector2(leftCenter.X + LeftOffset, leftCenter.Y - (Length / 2));
+
+            AddRectangle(entities, hingeLeftBottom, new Vector2(hingeLeftBottom.X + Width, hingeLeftBottom.Y + Length));
         }
     }
 

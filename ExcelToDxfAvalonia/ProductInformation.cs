@@ -6,7 +6,7 @@ public class ProductInformation
 
     public string Quarter { get; set; }
 
-    public string DoorHingeType { get; set; }
+    public HingeType HingeType { get; set; }
 
     public string DoorLockType { get; set; }
 
@@ -30,6 +30,6 @@ public class ProductInformation
 
     public override string ToString()
     {
-        return $"{this.ProductType} {this.Quarter} {this.DoorHingeType} {this.DoorLockType}";
+        return $"{this.ProductType} {this.Quarter} {this.HingeType} {this.DoorLockType}";
     }
 }

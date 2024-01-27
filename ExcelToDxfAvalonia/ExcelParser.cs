@@ -48,7 +48,7 @@ public class ExcelParser
             {
                 ProductType = productType,
                 Quarter = notes[2],
-                DoorHingeType = notes[7],
+                HingeType = ParseHingeType(notes[7]),
                 DoorLockType = notes[8],
                 Notes = notes.Aggregate(new StringBuilder(), (acc, i) => acc.AppendLine(i)).ToString(),
                 JambWidth = (int)(double)row1[15],
@@ -63,5 +63,19 @@ public class ExcelParser
         }
 
         return products;
+    }
+
+    private static HingeType ParseHingeType(string hingeType)
+    {
+        const string HingeEB_755 = "EB 755";
+        const string HingeR_10_102x76 = "R-10 102x76";
+        const string Hinge4BB_R14 = "4BB-R14";
+        const string HingeOTLAV_30x120 = "ОТLAV 30 х 120";
+
+        return hingeType.Contains(HingeEB_755) ? HingeType.HingeEB_755
+            : hingeType.Contains(HingeR_10_102x76) ? HingeType.HingeR_10_102x76
+            : hingeType.Contains(Hinge4BB_R14) ? HingeType.Hinge4BB_R14
+            : hingeType.Contains(HingeOTLAV_30x120) ? HingeType.HingeOTLAV_30x120
+            : throw new InvalidOperationException($"Invalid hinge type: '{hingeType}'");
     }
 }
