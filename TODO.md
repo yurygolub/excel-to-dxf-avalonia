@@ -8,3 +8,4 @@
 
 ## UI
 * Add exceptions view
+* Implement input products from program
