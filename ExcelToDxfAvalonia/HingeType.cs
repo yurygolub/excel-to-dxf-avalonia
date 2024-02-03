@@ -4,6 +4,8 @@ namespace ExcelToDxfAvalonia;
 
 public enum HingeType
 {
+    Undefined,
+
     [Description("EB 755")]
     HingeEB_755,
 

@@ -57,7 +57,8 @@ public class ExcelParser
             {
                 ProductType = productType,
                 Quarter = notes[QuarterIndex],
-                HingeType = ParseHingeType(notes),
+                HingeType = ParseHingeType(notes, out string hingeTypeRaw),
+                HingeTypeRaw = hingeTypeRaw,
                 DoorLockType = notes[DoorLockTypeIndex],
                 Notes = notes.Aggregate(new StringBuilder(), (acc, i) => acc.AppendLine(i)).ToString(),
                 JambWidth = (int)(double)row1[WidthIndex],
@@ -74,11 +75,11 @@ public class ExcelParser
         return products;
     }
 
-    private static HingeType ParseHingeType(string[] notes)
+    private static HingeType ParseHingeType(string[] notes, out string hingeTypeRaw)
     {
         const string HingeMark = "Петля";
 
-        string hingeType = Array.Find(notes, x => x.Contains(HingeMark, StringComparison.OrdinalIgnoreCase))
+        hingeTypeRaw = Array.Find(notes, x => x.Contains(HingeMark, StringComparison.OrdinalIgnoreCase))
             ?? throw new InvalidOperationException("Could not parse hinge type.");
 
         const string HingeEB_755 = "EB 755";
@@ -86,10 +87,10 @@ public class ExcelParser
         const string Hinge4BB_R14 = "4BB-R14";
         const string HingeOTLAV_30x120 = "ОТLAV 30 х 120";
 
-        return hingeType.Contains(HingeEB_755) ? HingeType.HingeEB_755
-            : hingeType.Contains(HingeR_10_102x76) ? HingeType.HingeR_10_102x76
-            : hingeType.Contains(Hinge4BB_R14) ? HingeType.Hinge4BB_R14
-            : hingeType.Contains(HingeOTLAV_30x120) ? HingeType.HingeOTLAV_30x120
-            : throw new InvalidOperationException($"Invalid hinge type: '{hingeType}'");
+        return hingeTypeRaw.Contains(HingeEB_755) ? HingeType.HingeEB_755
+            : hingeTypeRaw.Contains(HingeR_10_102x76) ? HingeType.HingeR_10_102x76
+            : hingeTypeRaw.Contains(Hinge4BB_R14) ? HingeType.Hinge4BB_R14
+            : hingeTypeRaw.Contains(HingeOTLAV_30x120) ? HingeType.HingeOTLAV_30x120
+            : HingeType.Undefined;
     }
 }

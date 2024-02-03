@@ -8,6 +8,8 @@ public class ProductInformation
 
     public HingeType HingeType { get; set; }
 
+    public string HingeTypeRaw { get; set; }
+
     public string DoorLockType { get; set; }
 
     public int JambLength { get; set; }

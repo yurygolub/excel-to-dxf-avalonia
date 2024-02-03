@@ -64,7 +64,10 @@
                                     Binding="{Binding Quarter}"/>
 
                 <DataGridTextColumn Header="Тип петли"
-                                    Binding="{Binding HingeType, Converter={StaticResource EnumToDescriptionConverter}}"/>
+                                    Binding="{Binding HingeType, Converter={StaticResource EnumToDescriptionConverter}, Mode=OneWay}"/>
+
+                <DataGridTextColumn Header="Тип петли"
+                                    Binding="{Binding HingeTypeRaw}"/>
 
                 <DataGridTextColumn Header="Тип замка"
                                     Binding="{Binding DoorLockType}"/>
