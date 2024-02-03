@@ -7,7 +7,7 @@
         Name="AboutViewControl"
         CanResize="False"
         WindowStartupLocation="CenterScreen"
-        Title="About"
+        Title="Версия"
         Height="150" Width="300">
     
     <Window.KeyBindings>
@@ -15,31 +15,55 @@
                     Command="{Binding Close, ElementName=AboutViewControl}"/>
     </Window.KeyBindings>
     
+    <Window.Styles>
+        <Style Selector="TextBox">
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="Margin" Value="10" />
+        </Style>
+        <Style Selector="TextBox.styled">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="IsReadOnly" Value="True" />
+            <Setter Property="CaretBrush" Value="Transparent" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+        </Style>
+        <Style Selector="TextBox.styled:pointerover /template/ Border#border">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="TextBox.styled:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="TextBox.styled:focus /template/ Border#border">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="TextBox.styled:focus /template/ Border#PART_BorderElement">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+    </Window.Styles>
+    
     <StackPanel VerticalAlignment="Center">
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Center">
             <TextBlock Padding="5" Margin="10">
-                Version:
+                Версия:
             </TextBlock>
 
-            <TextBox Text="{Binding Version, Mode=OneWay}"
-                     Background="Transparent"
-                     BorderThickness="0"
-                     IsReadOnly="True"
-                     Padding="5" Margin="10"/>
+            <TextBox Classes="styled"
+                     Text="{Binding Version, Mode=OneWay}"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Center">
             <TextBlock Padding="5" Margin="10">
-                Build date:
+                Дата сборки:
             </TextBlock>
-            
-            <TextBox Text="{Binding BuildDate, Mode=OneWay}"
-                     Background="Transparent"
-                     BorderThickness="0"
-                     IsReadOnly="True"
-                     Padding="5" Margin="10"/>
+
+            <TextBox Classes="styled"
+                     Text="{Binding BuildDate, Mode=OneWay}"/>
         </StackPanel>
     </StackPanel>
 </Window>
