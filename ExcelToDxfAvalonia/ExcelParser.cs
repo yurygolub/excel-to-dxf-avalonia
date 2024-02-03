@@ -12,6 +12,14 @@ public class ExcelParser
 {
     public IEnumerable<ProductInformation> ReadExcelFile(string filePath)
     {
+        const int HeaderRowsCount = 4;
+        const int ProductTypeIndex = 2;
+        const int QuarterIndex = 2;
+        const int DoorLockTypeIndex = 8;
+        const int NotesIndex = 14;
+        const int WidthIndex = 15;
+        const int LengthIndex = 16;
+
         using FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
 
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -26,47 +34,53 @@ public class ExcelParser
         Console.OutputEncoding = Encoding.UTF8;
 
         DataTable table = result.Tables.Cast<DataTable>().First();
-        DataRow[] rows = table.Rows.Cast<DataRow>().Skip(4).ToArray();
+        DataRow[] rows = table.Rows.Cast<DataRow>().Skip(HeaderRowsCount).ToArray();
         var products = new List<ProductInformation>();
 
-        for (int i = 0; i < rows.Length - 3; i += 5)
+        const int RowStep = 5;
+        for (int i = 0; i < rows.Length - 3; i += RowStep)
         {
             DataRow row1 = rows[i];
             DataRow row2 = rows[i + 1];
             DataRow row3 = rows[i + 2];
             DataRow row4 = rows[i + 3];
 
-            string productType = row1[2].ToString();
+            string productType = row1[ProductTypeIndex].ToString();
             if (string.IsNullOrWhiteSpace(productType))
             {
                 continue;
             }
 
-            string[] notes = row1[14].ToString().Split('*');
+            string[] notes = row1[NotesIndex].ToString().Split('*');
 
             products.Add(new ProductInformation
             {
                 ProductType = productType,
-                Quarter = notes[2],
-                HingeType = ParseHingeType(notes[7]),
-                DoorLockType = notes[8],
+                Quarter = notes[QuarterIndex],
+                HingeType = ParseHingeType(notes),
+                DoorLockType = notes[DoorLockTypeIndex],
                 Notes = notes.Aggregate(new StringBuilder(), (acc, i) => acc.AppendLine(i)).ToString(),
-                JambWidth = (int)(double)row1[15],
-                JambLength = (int)(double)row1[16],
-                InnerJambWidth = (int?)(row2[15] is DBNull ? null : (double?)row2[15]),
-                InnerJambLength = (int?)(row2[16] is DBNull ? null : (double?)row2[16]),
-                LintelWidth = (int)(double)row3[15],
-                LintelLength = (int)(double)row3[16],
-                InnerLintelWidth = (int?)(row4[15] is DBNull ? null : (double?)row4[15]),
-                InnerLintelLength = (int?)(row4[15] is DBNull ? null : (double?)row4[16]),
+                JambWidth = (int)(double)row1[WidthIndex],
+                JambLength = (int)(double)row1[LengthIndex],
+                InnerJambWidth = (int?)(row2[WidthIndex] is DBNull ? null : (double?)row2[WidthIndex]),
+                InnerJambLength = (int?)(row2[LengthIndex] is DBNull ? null : (double?)row2[LengthIndex]),
+                LintelWidth = (int)(double)row3[WidthIndex],
+                LintelLength = (int)(double)row3[LengthIndex],
+                InnerLintelWidth = (int?)(row4[WidthIndex] is DBNull ? null : (double?)row4[WidthIndex]),
+                InnerLintelLength = (int?)(row4[LengthIndex] is DBNull ? null : (double?)row4[LengthIndex]),
             });
         }
 
         return products;
     }
 
-    private static HingeType ParseHingeType(string hingeType)
+    private static HingeType ParseHingeType(string[] notes)
     {
+        const string HingeMark = "Петля";
+
+        string hingeType = Array.Find(notes, x => x.Contains(HingeMark, StringComparison.OrdinalIgnoreCase))
+            ?? throw new InvalidOperationException("Could not parse hinge type.");
+
         const string HingeEB_755 = "EB 755";
         const string HingeR_10_102x76 = "R-10 102x76";
         const string Hinge4BB_R14 = "4BB-R14";
