@@ -2,10 +2,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:conv="clr-namespace:ExcelToDxfAvalonia.Converters"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="ExcelToDxfAvalonia.Views.MainWindow"
         Title="ExcelToDxfAvalonia">
 
+    <Window.Resources>
+        <conv:EnumToCollectionConverter x:Key="EnumToCollectionConverter"/>
+        <conv:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
+    </Window.Resources>
+    
     <Window.KeyBindings>
         <KeyBinding Gesture="Ctrl+Q"
                     Command="{Binding SwitchConsoleVisibility}"/>
@@ -58,7 +64,7 @@
                                     Binding="{Binding Quarter}"/>
 
                 <DataGridTextColumn Header="Тип петли"
-                                    Binding="{Binding DoorHingeType}"/>
+                                    Binding="{Binding HingeType, Converter={StaticResource EnumToDescriptionConverter}}"/>
 
                 <DataGridTextColumn Header="Тип замка"
                                     Binding="{Binding DoorLockType}"/>
