@@ -10,12 +10,26 @@ namespace ExcelToDxfAvalonia;
 
 public class ExcelParser
 {
+    private static readonly (HingeType type, string raw)[] HingeTypes = new (HingeType type, string raw)[]
+    {
+        (HingeType.Hinge4BB_R14, "4BB-R14"),
+        (HingeType.HingeEB_755, "EB 755"),
+        (HingeType.HingeOTLAV_30x120, "ОТLAV 30 х 120"),
+        (HingeType.HingeR_10_102x76, "R-10 102x76"),
+    };
+
+    private static readonly (LockType type, string raw)[] LockTypes = new (LockType type, string raw)[]
+    {
+        (LockType.BorderRoom, "Border Room"),
+        (LockType.LobZ7504, "Z7504"),
+        (LockType.LH25_50SN, "LH 25-50 SN"),
+    };
+
     public IEnumerable<ProductInformation> ReadExcelFile(string filePath)
     {
         const int HeaderRowsCount = 4;
         const int ProductTypeIndex = 2;
         const int QuarterIndex = 2;
-        const int DoorLockTypeIndex = 8;
         const int NotesIndex = 14;
         const int WidthIndex = 15;
         const int LengthIndex = 16;
@@ -59,7 +73,8 @@ public class ExcelParser
                 Quarter = notes[QuarterIndex],
                 HingeType = ParseHingeType(notes, out string hingeTypeRaw),
                 HingeTypeRaw = hingeTypeRaw,
-                DoorLockType = notes[DoorLockTypeIndex],
+                LockType = ParseLockType(notes, out string lockTypeRaw),
+                LockTypeRaw = lockTypeRaw,
                 Notes = notes.Aggregate(new StringBuilder(), (acc, i) => acc.AppendLine(i)).ToString(),
                 JambWidth = (int)(double)row1[WidthIndex],
                 JambLength = (int)(double)row1[LengthIndex],
@@ -79,18 +94,25 @@ public class ExcelParser
     {
         const string HingeMark = "Петля";
 
-        hingeTypeRaw = Array.Find(notes, x => x.Contains(HingeMark, StringComparison.OrdinalIgnoreCase))
-            ?? throw new InvalidOperationException("Could not parse hinge type.");
+        string hingeTypeTemp = Array.Find(notes, x => x.Contains(HingeMark, StringComparison.OrdinalIgnoreCase))
+            ?? string.Empty;
 
-        const string HingeEB_755 = "EB 755";
-        const string HingeR_10_102x76 = "R-10 102x76";
-        const string Hinge4BB_R14 = "4BB-R14";
-        const string HingeOTLAV_30x120 = "ОТLAV 30 х 120";
+        hingeTypeRaw = hingeTypeTemp.Trim();
 
-        return hingeTypeRaw.Contains(HingeEB_755) ? HingeType.HingeEB_755
-            : hingeTypeRaw.Contains(HingeR_10_102x76) ? HingeType.HingeR_10_102x76
-            : hingeTypeRaw.Contains(Hinge4BB_R14) ? HingeType.Hinge4BB_R14
-            : hingeTypeRaw.Contains(HingeOTLAV_30x120) ? HingeType.HingeOTLAV_30x120
-            : HingeType.Undefined;
+        return Array.Find(HingeTypes, x => hingeTypeTemp.Contains(x.raw, StringComparison.OrdinalIgnoreCase)).type;
+    }
+
+    private static LockType ParseLockType(string[] notes, out string lockTypeRaw)
+    {
+        const string LockMark1 = "Замок";
+        const string LockMark2 = "Защелка";
+
+        string lockTypeTemp = Array.Find(notes, x => x.Contains(LockMark1, StringComparison.OrdinalIgnoreCase)
+            || x.Contains(LockMark2, StringComparison.OrdinalIgnoreCase))
+            ?? string.Empty;
+
+        lockTypeRaw = lockTypeTemp.Trim();
+
+        return Array.Find(LockTypes, x => lockTypeTemp.Contains(x.raw, StringComparison.OrdinalIgnoreCase)).type;
     }
 }

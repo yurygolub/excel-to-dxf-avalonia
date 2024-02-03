@@ -70,7 +70,10 @@
                                     Binding="{Binding HingeTypeRaw}"/>
 
                 <DataGridTextColumn Header="Тип замка"
-                                    Binding="{Binding DoorLockType}"/>
+                                    Binding="{Binding LockType, Converter={StaticResource EnumToDescriptionConverter}, Mode=OneWay}"/>
+
+                <DataGridTextColumn Header="Тип замка"
+                                    Binding="{Binding LockTypeRaw}"/>
 
                 <DataGridTextColumn Header="Ширина стоевых"
                                     Binding="{Binding JambWidth}"/>
