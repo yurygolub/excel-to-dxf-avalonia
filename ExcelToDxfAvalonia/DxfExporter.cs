@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using netDxf;
 using netDxf.Collections;
@@ -53,26 +54,57 @@ public class DxfExporter
         switch (product.HingeType)
         {
             case HingeType.HingeEB_755:
+                AddHingeAmount(AddHingeEB_755, entities, leftBottom, product);
                 break;
 
             case HingeType.HingeR_10_102x76:
-                const int BottomOffset = 256;
-                const int FirstUpOffset = 313;
-                const int SecondUpOffset = FirstUpOffset + 500;
-
-                AddHingeR_10_102x76(entities, new Vector2(leftBottom.X, leftBottom.Y + BottomOffset));
-                AddHingeR_10_102x76(entities, new Vector2(leftBottom.X, leftBottom.Y + product.JambLength - SecondUpOffset));
-                AddHingeR_10_102x76(entities, new Vector2(leftBottom.X, leftBottom.Y + product.JambLength - FirstUpOffset));
+                AddHingeAmount(AddHingeR_10_102x76, entities, leftBottom, product);
                 break;
 
             case HingeType.Hinge4BB_R14:
+                AddHingeAmount(AddHinge4BB_R14, entities, leftBottom, product);
                 break;
 
             case HingeType.HingeOTLAV_30x120:
+                AddHingeAmount(AddHingeOTLAV_30x120, entities, leftBottom, product);
                 break;
 
             default:
                 break;
+        }
+
+        static void AddHingeAmount(Action<DrawingEntities, Vector2> addHinge, DrawingEntities entities, Vector2 leftBottom, ProductInformation product)
+        {
+            const int BottomOffset = 256;
+            const int UpOffset = 313;
+            const int DistanceBetweenHinges = 500;
+
+            if (product.HingeAmount == 4)
+            {
+                addHinge(entities, new Vector2(leftBottom.X, leftBottom.Y + product.JambLength - (UpOffset + DistanceBetweenHinges + DistanceBetweenHinges)));
+            }
+
+            if (product.HingeAmount >= 3)
+            {
+                addHinge(entities, new Vector2(leftBottom.X, leftBottom.Y + product.JambLength - (UpOffset + DistanceBetweenHinges)));
+            }
+
+            if (product.HingeAmount >= 2)
+            {
+                addHinge(entities, new Vector2(leftBottom.X, leftBottom.Y + product.JambLength - UpOffset));
+                addHinge(entities, new Vector2(leftBottom.X, leftBottom.Y + BottomOffset));
+            }
+        }
+
+        static void AddHingeEB_755(DrawingEntities entities, Vector2 leftCenter)
+        {
+            const double Width = 29.6;
+            const double Length = 102.5;
+            const double LeftOffset = 33.7;
+
+            Vector2 hingeLeftBottom = new Vector2(leftCenter.X + LeftOffset, leftCenter.Y - (Length / 2));
+
+            AddRectangle(entities, hingeLeftBottom, new Vector2(hingeLeftBottom.X + Width, hingeLeftBottom.Y + Length));
         }
 
         static void AddHingeR_10_102x76(DrawingEntities entities, Vector2 leftCenter)
@@ -80,6 +112,28 @@ public class DxfExporter
             const double Width = 29.6;
             const double Length = 102.5;
             const double LeftOffset = 50;
+
+            Vector2 hingeLeftBottom = new Vector2(leftCenter.X + LeftOffset, leftCenter.Y - (Length / 2));
+
+            AddRectangle(entities, hingeLeftBottom, new Vector2(hingeLeftBottom.X + Width, hingeLeftBottom.Y + Length));
+        }
+
+        static void AddHinge4BB_R14(DrawingEntities entities, Vector2 leftCenter)
+        {
+            const double Width = 28.6;
+            const double Length = 100.5;
+            const double LeftOffset = 50;
+
+            Vector2 hingeLeftBottom = new Vector2(leftCenter.X + LeftOffset, leftCenter.Y - (Length / 2));
+
+            AddRectangle(entities, hingeLeftBottom, new Vector2(hingeLeftBottom.X + Width, hingeLeftBottom.Y + Length));
+        }
+
+        static void AddHingeOTLAV_30x120(DrawingEntities entities, Vector2 leftCenter)
+        {
+            const double Width = 30.4;
+            const double Length = 102.4;
+            const double LeftOffset = 57.5;
 
             Vector2 hingeLeftBottom = new Vector2(leftCenter.X + LeftOffset, leftCenter.Y - (Length / 2));
 

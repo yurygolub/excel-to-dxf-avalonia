@@ -10,6 +10,8 @@ public class ProductInformation
 
     public string HingeTypeRaw { get; set; }
 
+    public int? HingeAmount { get; set; }
+
     public LockType LockType { get; set; }
 
     public string LockTypeRaw { get; set; }

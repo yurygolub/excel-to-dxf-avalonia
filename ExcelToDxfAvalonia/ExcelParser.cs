@@ -30,6 +30,8 @@ public class ExcelParser
         const int HeaderRowsCount = 4;
         const int ProductTypeIndex = 2;
         const int QuarterIndex = 2;
+        const int LeftHingeAmountIndex = 10;
+        const int RightHingeAmountIndex = 11;
         const int NotesIndex = 14;
         const int WidthIndex = 15;
         const int LengthIndex = 16;
@@ -73,6 +75,7 @@ public class ExcelParser
                 Quarter = notes[QuarterIndex],
                 HingeType = ParseHingeType(notes, out string hingeTypeRaw),
                 HingeTypeRaw = hingeTypeRaw,
+                HingeAmount = ParseHingeAmount(row1[LeftHingeAmountIndex], row1[RightHingeAmountIndex]),
                 LockType = ParseLockType(notes, out string lockTypeRaw),
                 LockTypeRaw = lockTypeRaw,
                 Notes = notes.Aggregate(new StringBuilder(), (acc, i) => acc.AppendLine(i)).ToString(),
@@ -114,5 +117,13 @@ public class ExcelParser
         lockTypeRaw = lockTypeTemp.Trim();
 
         return Array.Find(LockTypes, x => lockTypeTemp.Contains(x.raw, StringComparison.OrdinalIgnoreCase)).type;
+    }
+
+    private static int? ParseHingeAmount(object left, object right)
+    {
+        int? leftAmount = (int?)(left is DBNull ? null : (double?)left);
+        int? rightAmount = (int?)(right is DBNull ? null : (double?)right);
+
+        return leftAmount ?? rightAmount;
     }
 }
