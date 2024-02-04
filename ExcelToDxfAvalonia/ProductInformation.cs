@@ -6,9 +6,17 @@ public class ProductInformation
 
     public string Quarter { get; set; }
 
-    public string DoorHingeType { get; set; }
+    public HingeType HingeType { get; set; }
 
-    public string DoorLockType { get; set; }
+    public string HingeTypeRaw { get; set; }
+
+    public int? HingeAmount { get; set; }
+
+    public int? LeafAmount { get; set; }
+
+    public LockType LockType { get; set; }
+
+    public string LockTypeRaw { get; set; }
 
     public int JambLength { get; set; }
 
@@ -30,6 +38,6 @@ public class ProductInformation
 
     public override string ToString()
     {
-        return $"{this.ProductType} {this.Quarter} {this.DoorHingeType} {this.DoorLockType}";
+        return $"{this.ProductType} {this.Quarter} {this.HingeType} {this.LockType}";
     }
 }

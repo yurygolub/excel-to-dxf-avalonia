@@ -11,6 +11,9 @@ using ExcelToDxfAvalonia.Models;
 using ExcelToDxfAvalonia.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MsBox.Avalonia;
+using MsBox.Avalonia.Base;
+using MsBox.Avalonia.Enums;
 
 namespace ExcelToDxfAvalonia.ViewModels;
 
@@ -60,6 +63,7 @@ public class MainViewModel : ViewModelBase
         catch (Exception ex)
         {
             this.logger.LogError(ex, "Unhandled exception:");
+            await this.OpenDialog("Ошибка", $"Возникла ошибка при чтении excel файла{Environment.NewLine}{ex.Message}");
         }
     }
 
@@ -77,6 +81,7 @@ public class MainViewModel : ViewModelBase
         catch (Exception ex)
         {
             this.logger.LogError(ex, "Unhandled exception:");
+            await this.OpenDialog("Ошибка", $"Возникла ошибка при экспорте dxf файла{Environment.NewLine}{ex.Message}");
         }
     }
 
@@ -150,5 +155,14 @@ public class MainViewModel : ViewModelBase
         }
 
         return false;
+    }
+
+    private async Task OpenDialog(string title, string message)
+    {
+        IMsBox<ButtonResult> box = MessageBoxManager.GetMessageBoxStandard(title, message, ButtonEnum.Ok);
+        if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            await box.ShowWindowDialogAsync(desktop.MainWindow);
+        }
     }
 }

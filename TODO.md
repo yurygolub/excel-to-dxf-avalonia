@@ -1,11 +1,9 @@
-## Create class structure
-* Create classes for each product type
-
 ## Implement excel file parsing
-* Move parsing logic to separate class
-* Parse all fields
+* Create classes or enumes for each product type and item type
 
 ## Implement dxf file export
+* Implement lock export
 * Implement perforation
 
 ## UI
+* Implement input products from program
