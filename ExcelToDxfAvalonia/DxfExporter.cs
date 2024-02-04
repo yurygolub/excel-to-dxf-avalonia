@@ -218,6 +218,79 @@ public class DxfExporter
         }
     }
 
+    private static void AddLocks(DrawingEntities entities, Vector2 leftBottom, ProductInformation product)
+    {
+        switch (product.LockType)
+        {
+            case LockType.BorderRoom:
+                AddBorderRoomLock(entities, leftBottom);
+                break;
+
+            case LockType.LobZ7504:
+                AddLobZ7504Lock(entities, leftBottom);
+                break;
+
+            case LockType.LH25_50SN:
+                AddLH25_50SNLock(entities, leftBottom);
+                break;
+
+            default:
+                break;
+        }
+
+        static void AddBorderRoomLock(DrawingEntities entities, Vector2 leftBottom)
+        {
+            const int BottomOffset = 981;
+            const double LeftOffset = 65.5;
+
+            Vector2 lockLeftBottom = new Vector2(leftBottom.X + LeftOffset, leftBottom.Y + BottomOffset);
+            AddUpperLockPart(entities, lockLeftBottom);
+        }
+
+        static void AddLobZ7504Lock(DrawingEntities entities, Vector2 leftBottom)
+        {
+            const int Offset = 30;
+            const int Height = 50;
+            const int BottomOffset = 973;
+            const double LeftOffset = 65.5;
+
+            Vector2 lockLeftBottom = new Vector2(leftBottom.X + LeftOffset, leftBottom.Y + BottomOffset);
+            AddLowerLockPart(entities, lockLeftBottom);
+
+            lockLeftBottom = new Vector2(leftBottom.X + LeftOffset, leftBottom.Y + BottomOffset + Offset + Height);
+            AddUpperLockPart(entities, lockLeftBottom);
+        }
+
+        static void AddLH25_50SNLock(DrawingEntities entities, Vector2 leftBottom)
+        {
+            const int Offset = 11;
+            const int Height = 50;
+            const int BottomOffset = 953;
+            const double LeftOffset = 65.5;
+
+            Vector2 lockLeftBottom = new Vector2(leftBottom.X + LeftOffset, leftBottom.Y + BottomOffset);
+            AddLowerLockPart(entities, lockLeftBottom);
+
+            lockLeftBottom = new Vector2(leftBottom.X + LeftOffset, leftBottom.Y + BottomOffset + Offset + Height);
+            AddUpperLockPart(entities, lockLeftBottom);
+        }
+
+        static void AddUpperLockPart(DrawingEntities entities, Vector2 leftBottom)
+        {
+            const int Height = 50;
+            const int Width = 18;
+
+            AddRectangle(entities, leftBottom, new Vector2(leftBottom.X + Width, leftBottom.Y + Height));
+        }
+
+        static void AddLowerLockPart(DrawingEntities entities, Vector2 leftBottom)
+        {
+            const int Height = 50;
+            const int Width = 14;
+            const int Radius = 20;
+        }
+    }
+
     private static void AddRectangle(DrawingEntities entities, Vector2 leftBottom, Vector2 rightUp)
     {
         entities.Add(new Line(leftBottom, new Vector2(leftBottom.X, rightUp.Y))); // left
