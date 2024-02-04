@@ -12,6 +12,8 @@ public class ProductInformation
 
     public int? HingeAmount { get; set; }
 
+    public int? LeafAmount { get; set; }
+
     public LockType LockType { get; set; }
 
     public string LockTypeRaw { get; set; }

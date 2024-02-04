@@ -22,28 +22,68 @@ public class DxfExporter
 
         static void ExportToDxfFile(string filePath, ProductInformation product)
         {
-            const int JambDistance = 200;
-            const int LintelDistance = 100;
+            const int LongDistance = 200;
+            const int ShortDistance = 100;
+
             DxfDocument doc = new DxfDocument();
 
-            // left jamb
-            AddRectangle(doc.Entities, new Vector2(0, 0), new Vector2(product.JambWidth, product.JambLength));
+            Vector2 leftBottom = Vector2.Zero;
 
-            Vector2 leftBottom = new Vector2(product.JambWidth + JambDistance, 0);
+            // left jamb
+            AddRectangle(doc.Entities, leftBottom, new Vector2(product.JambWidth, product.JambLength));
+
+            if (product.LeafAmount == 2)
+            {
+                AddHinges(doc.Entities, leftBottom, product);
+            }
+
+            leftBottom = new Vector2(product.JambWidth + ShortDistance, leftBottom.Y);
 
             // right jamb
             AddRectangle(
                 doc.Entities,
-                new Vector2(product.JambWidth + JambDistance, 0),
-                new Vector2((product.JambWidth * 2) + JambDistance, product.JambLength));
+                leftBottom,
+                new Vector2(leftBottom.X + product.JambWidth, product.JambLength));
+
+            AddHinges(doc.Entities, leftBottom, product);
+
+            leftBottom = new Vector2(leftBottom.X + product.JambWidth + LongDistance, leftBottom.Y);
+
+            Vector2 leftUp = new Vector2(0, product.JambLength + LongDistance);
 
             // lintel
             AddRectangle(
                 doc.Entities,
-                new Vector2(LintelDistance, LintelDistance + product.JambLength),
-                new Vector2(LintelDistance + product.LintelLength, LintelDistance + product.JambLength + product.LintelWidth));
+                leftUp,
+                new Vector2(leftUp.X + product.LintelLength, leftUp.Y + product.LintelWidth));
 
-            AddHinges(doc.Entities, leftBottom, product);
+            leftUp = new Vector2(leftUp.X, leftUp.Y + product.LintelWidth + ShortDistance);
+
+            if (product.InnerJambLength.HasValue
+                && product.InnerJambWidth.HasValue
+                && product.InnerLintelLength.HasValue
+                && product.InnerLintelWidth.HasValue)
+            {
+                // left inner jamb
+                AddRectangle(
+                    doc.Entities,
+                    leftBottom,
+                    new Vector2(leftBottom.X + product.InnerJambWidth.Value, product.InnerJambLength.Value));
+
+                leftBottom = new Vector2(leftBottom.X + product.InnerJambWidth.Value + ShortDistance, leftBottom.Y);
+
+                // right inner jamb
+                AddRectangle(
+                    doc.Entities,
+                    leftBottom,
+                    new Vector2(leftBottom.X + product.InnerJambWidth.Value, product.InnerJambLength.Value));
+
+                // inner lintel
+                AddRectangle(
+                    doc.Entities,
+                    leftUp,
+                    new Vector2(leftUp.X + product.InnerLintelLength.Value, leftUp.Y + product.InnerLintelWidth.Value));
+            }
 
             doc.Save(filePath);
         }
@@ -112,10 +152,23 @@ public class DxfExporter
             const double Width = 29.6;
             const double Length = 102.5;
             const double LeftOffset = 50;
+            const double Radius = 10;
 
             Vector2 hingeLeftBottom = new Vector2(leftCenter.X + LeftOffset, leftCenter.Y - (Length / 2));
+            Vector2 hingeLeftUp = new Vector2(hingeLeftBottom.X, hingeLeftBottom.Y + Length);
 
-            AddRectangle(entities, hingeLeftBottom, new Vector2(hingeLeftBottom.X + Width, hingeLeftBottom.Y + Length));
+            entities.Add(new Line(hingeLeftBottom, hingeLeftUp)); // left
+
+            entities.Add(new Line(hingeLeftUp, new Vector2(hingeLeftUp.X + (Width - Radius), hingeLeftUp.Y))); // up
+
+            entities.Add(new Line(
+                new Vector2(hingeLeftUp.X + Width, hingeLeftUp.Y - Radius),
+                new Vector2(hingeLeftBottom.X + Width, hingeLeftBottom.Y + Radius))); // right
+
+            entities.Add(new Line(hingeLeftBottom, new Vector2(hingeLeftBottom.X + (Width - Radius), hingeLeftBottom.Y))); // down
+
+            entities.Add(new Arc(new Vector2(hingeLeftUp.X + (Width - Radius), hingeLeftUp.Y - Radius), Radius, 0, 90));
+            entities.Add(new Arc(new Vector2(hingeLeftBottom.X + (Width - Radius), hingeLeftBottom.Y + Radius), Radius, 270, 360));
         }
 
         static void AddHinge4BB_R14(DrawingEntities entities, Vector2 leftCenter)
@@ -123,10 +176,23 @@ public class DxfExporter
             const double Width = 28.6;
             const double Length = 100.5;
             const double LeftOffset = 50;
+            const double Radius = 14;
 
             Vector2 hingeLeftBottom = new Vector2(leftCenter.X + LeftOffset, leftCenter.Y - (Length / 2));
+            Vector2 hingeLeftUp = new Vector2(hingeLeftBottom.X, hingeLeftBottom.Y + Length);
 
-            AddRectangle(entities, hingeLeftBottom, new Vector2(hingeLeftBottom.X + Width, hingeLeftBottom.Y + Length));
+            entities.Add(new Line(hingeLeftBottom, hingeLeftUp)); // left
+
+            entities.Add(new Line(hingeLeftUp, new Vector2(hingeLeftUp.X + (Width - Radius), hingeLeftUp.Y))); // up
+
+            entities.Add(new Line(
+                new Vector2(hingeLeftUp.X + Width, hingeLeftUp.Y - Radius),
+                new Vector2(hingeLeftBottom.X + Width, hingeLeftBottom.Y + Radius))); // right
+
+            entities.Add(new Line(hingeLeftBottom, new Vector2(hingeLeftBottom.X + (Width - Radius), hingeLeftBottom.Y))); // down
+
+            entities.Add(new Arc(new Vector2(hingeLeftUp.X + (Width - Radius), hingeLeftUp.Y - Radius), Radius, 0, 90));
+            entities.Add(new Arc(new Vector2(hingeLeftBottom.X + (Width - Radius), hingeLeftBottom.Y + Radius), Radius, 270, 360));
         }
 
         static void AddHingeOTLAV_30x120(DrawingEntities entities, Vector2 leftCenter)
@@ -134,10 +200,21 @@ public class DxfExporter
             const double Width = 30.4;
             const double Length = 102.4;
             const double LeftOffset = 57.5;
+            const double Radius = Width / 2;
 
             Vector2 hingeLeftBottom = new Vector2(leftCenter.X + LeftOffset, leftCenter.Y - (Length / 2));
+            Vector2 hingeLeftUp = new Vector2(hingeLeftBottom.X, hingeLeftBottom.Y + Length);
 
-            AddRectangle(entities, hingeLeftBottom, new Vector2(hingeLeftBottom.X + Width, hingeLeftBottom.Y + Length));
+            entities.Add(new Line(
+                new Vector2(hingeLeftBottom.X, hingeLeftBottom.Y + Radius),
+                new Vector2(hingeLeftUp.X, hingeLeftUp.Y - Radius))); // left
+
+            entities.Add(new Line(
+                new Vector2(hingeLeftUp.X + Width, hingeLeftUp.Y - Radius),
+                new Vector2(hingeLeftBottom.X + Width, hingeLeftBottom.Y + Radius))); // right
+
+            entities.Add(new Arc(new Vector2(hingeLeftUp.X + Radius, hingeLeftUp.Y - Radius), Radius, 0, 180));
+            entities.Add(new Arc(new Vector2(hingeLeftBottom.X + Radius, hingeLeftBottom.Y + Radius), Radius, 180, 360));
         }
     }
 

@@ -32,6 +32,7 @@ public class ExcelParser
         const int QuarterIndex = 2;
         const int LeftHingeAmountIndex = 10;
         const int RightHingeAmountIndex = 11;
+        const int LeafAmountIndex = 12;
         const int NotesIndex = 14;
         const int WidthIndex = 15;
         const int LengthIndex = 16;
@@ -76,6 +77,7 @@ public class ExcelParser
                 HingeType = ParseHingeType(notes, out string hingeTypeRaw),
                 HingeTypeRaw = hingeTypeRaw,
                 HingeAmount = ParseHingeAmount(row1[LeftHingeAmountIndex], row1[RightHingeAmountIndex]),
+                LeafAmount = ParseDoorLeafAmount(row1[LeafAmountIndex]),
                 LockType = ParseLockType(notes, out string lockTypeRaw),
                 LockTypeRaw = lockTypeRaw,
                 Notes = notes.Aggregate(new StringBuilder(), (acc, i) => acc.AppendLine(i)).ToString(),
@@ -125,5 +127,27 @@ public class ExcelParser
         int? rightAmount = (int?)(right is DBNull ? null : (double?)right);
 
         return leftAmount ?? rightAmount;
+    }
+
+    private static int? ParseDoorLeafAmount(object cell)
+    {
+        if (cell is DBNull)
+        {
+            return null;
+        }
+
+        string[] parts = cell.ToString().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length > 0)
+        {
+            if (int.TryParse(parts[0], out int res))
+            {
+                return res;
+            }
+
+            return 1;
+        }
+
+        return null;
     }
 }

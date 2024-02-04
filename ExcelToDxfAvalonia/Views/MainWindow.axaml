@@ -13,7 +13,7 @@
     </Window.Resources>
     
     <Window.KeyBindings>
-        <KeyBinding Gesture="Ctrl+Q"
+        <KeyBinding Gesture="Ctrl+OemTilde"
                     Command="{Binding SwitchConsoleVisibility}"/>
         <KeyBinding Gesture="Ctrl+O"
                     Command="{Binding OpenFileAsync}"/>
@@ -71,6 +71,9 @@
 
                 <DataGridTextColumn Header="Количество петель"
                                     Binding="{Binding HingeAmount}"/>
+
+                <DataGridTextColumn Header="Количество створок"
+                                    Binding="{Binding LeafAmount}"/>
 
                 <DataGridTextColumn Header="Тип замка"
                                     Binding="{Binding LockType, Converter={StaticResource EnumToDescriptionConverter}, Mode=OneWay}"/>
