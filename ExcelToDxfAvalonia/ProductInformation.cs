@@ -4,7 +4,9 @@ public class ProductInformation
 {
     public string ProductType { get; set; }
 
-    public string Quarter { get; set; }
+    public QuarterType QuarterType { get; set; }
+
+    public string QuarterTypeRaw { get; set; }
 
     public HingeType HingeType { get; set; }
 
@@ -38,6 +40,6 @@ public class ProductInformation
 
     public override string ToString()
     {
-        return $"{this.ProductType} {this.Quarter} {this.HingeType} {this.LockType}";
+        return $"{this.ProductType} {this.QuarterType} {this.HingeType} {this.LockType}";
     }
 }
