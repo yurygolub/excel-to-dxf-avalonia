@@ -61,12 +61,15 @@
                                     Binding="{Binding ProductType}"/>
 
                 <DataGridTextColumn Header="Четверть"
-                                    Binding="{Binding Quarter}"/>
+                                    Binding="{Binding QuarterType, Converter={StaticResource EnumToDescriptionConverter}, Mode=OneWay}"/>
+
+                <DataGridTextColumn Header="Четверть в файле"
+                                    Binding="{Binding QuarterTypeRaw}"/>
 
                 <DataGridTextColumn Header="Тип петли"
                                     Binding="{Binding HingeType, Converter={StaticResource EnumToDescriptionConverter}, Mode=OneWay}"/>
 
-                <DataGridTextColumn Header="Тип петли"
+                <DataGridTextColumn Header="Тип петли в файле"
                                     Binding="{Binding HingeTypeRaw}"/>
 
                 <DataGridTextColumn Header="Количество петель"
@@ -78,7 +81,7 @@
                 <DataGridTextColumn Header="Тип замка"
                                     Binding="{Binding LockType, Converter={StaticResource EnumToDescriptionConverter}, Mode=OneWay}"/>
 
-                <DataGridTextColumn Header="Тип замка"
+                <DataGridTextColumn Header="Тип замка в файле"
                                     Binding="{Binding LockTypeRaw}"/>
 
                 <DataGridTextColumn Header="Ширина стоевых"

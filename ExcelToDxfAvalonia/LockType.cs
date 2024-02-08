@@ -12,6 +12,9 @@ namespace ExcelToDxfAvalonia
         [Description("LOB Z7504")]
         LobZ7504,
 
+        [Description("LOB Z755")]
+        LobZ755,
+
         [Description("LH 25-50 SN")]
         LH25_50SN,
     }

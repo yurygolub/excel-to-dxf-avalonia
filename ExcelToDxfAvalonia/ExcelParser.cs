@@ -10,10 +10,28 @@ namespace ExcelToDxfAvalonia;
 
 public class ExcelParser
 {
+    private static readonly (QuarterType type, string raw)[] QuarterTypes = new (QuarterType type, string raw)[]
+    {
+        (QuarterType.Quarter32H, "32 H"),
+        (QuarterType.Quarter34H, "34 H"),
+        (QuarterType.Quarter42H, "42 H"),
+        (QuarterType.Quarter44H, "44 H"),
+        (QuarterType.Quarter47, "47"),
+        (QuarterType.Quarter51, "51"),
+        (QuarterType.Quarter51H, "51 H"),
+        (QuarterType.Quarter53, "53"),
+        (QuarterType.Quarter53H, "53 H"),
+        (QuarterType.Quarter55, "55"),
+        (QuarterType.Quarter61, "61"),
+        (QuarterType.Quarter63, "63"),
+        (QuarterType.Quarter73, "73"),
+        (QuarterType.Quarter75, "75"),
+    };
+
     private static readonly (HingeType type, string raw)[] HingeTypes = new (HingeType type, string raw)[]
     {
         (HingeType.Hinge4BB_R14, "4BB-R14"),
-        (HingeType.HingeEB_755, "EB 755"),
+        (HingeType.HingeCEMOM_EB_755, "EB 755"),
         (HingeType.HingeOTLAV_30x120, "ОТLAV 30 х 120"),
         (HingeType.HingeR_10_102x76, "R-10 102x76"),
     };
@@ -22,6 +40,7 @@ public class ExcelParser
     {
         (LockType.BorderRoom, "Border Room"),
         (LockType.LobZ7504, "Z7504"),
+        (LockType.LobZ755, "Z755"),
         (LockType.LH25_50SN, "LH 25-50 SN"),
     };
 
@@ -73,7 +92,8 @@ public class ExcelParser
             products.Add(new ProductInformation
             {
                 ProductType = productType,
-                Quarter = notes[QuarterIndex],
+                QuarterType = ParseQuarterType(notes[QuarterIndex]),
+                QuarterTypeRaw = notes[QuarterIndex],
                 HingeType = ParseHingeType(notes, out string hingeTypeRaw),
                 HingeTypeRaw = hingeTypeRaw,
                 HingeAmount = ParseHingeAmount(row1[LeftHingeAmountIndex], row1[RightHingeAmountIndex]),
@@ -93,6 +113,11 @@ public class ExcelParser
         }
 
         return products;
+    }
+
+    private static QuarterType ParseQuarterType(string quarterTypeRaw)
+    {
+        return Array.Find(QuarterTypes, x => quarterTypeRaw.Contains(x.raw, StringComparison.OrdinalIgnoreCase)).type;
     }
 
     private static HingeType ParseHingeType(string[] notes, out string hingeTypeRaw)
