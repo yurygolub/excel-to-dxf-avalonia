@@ -93,8 +93,8 @@ public class DxfExporter
     {
         switch (product.HingeType)
         {
-            case HingeType.HingeEB_755:
-                AddHingeAmount(AddHingeEB_755, entities, leftBottom, product);
+            case HingeType.HingeCEMOM_EB_755:
+                AddHingeAmount(AddHingeCEMOM_EB_755, entities, leftBottom, product);
                 break;
 
             case HingeType.HingeR_10_102x76:
@@ -136,15 +136,20 @@ public class DxfExporter
             }
         }
 
-        static void AddHingeEB_755(DrawingEntities entities, Vector2 leftCenter)
+        static void AddHingeCEMOM_EB_755(DrawingEntities entities, Vector2 leftCenter)
         {
-            const double Width = 29.6;
-            const double Length = 102.5;
-            const double LeftOffset = 33.7;
+            const double Width = 4.2;
+            const double Length = 35;
+            const double LeftHingeOffset = 33.7;
+            const double LeftCircleOffset = 67.3;
+            const double Radius = 8.5;
 
-            Vector2 hingeLeftBottom = new Vector2(leftCenter.X + LeftOffset, leftCenter.Y - (Length / 2));
+            Vector2 hingeLeftBottom = new Vector2(leftCenter.X + LeftHingeOffset, leftCenter.Y - (Length / 2));
 
             AddRectangle(entities, hingeLeftBottom, new Vector2(hingeLeftBottom.X + Width, hingeLeftBottom.Y + Length));
+
+            Vector2 center = new Vector2(leftCenter.X + LeftCircleOffset, leftCenter.Y);
+            entities.Add(new Circle(center, Radius));
         }
 
         static void AddHingeR_10_102x76(DrawingEntities entities, Vector2 leftCenter)

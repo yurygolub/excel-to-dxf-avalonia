@@ -13,7 +13,7 @@ public class ExcelParser
     private static readonly (HingeType type, string raw)[] HingeTypes = new (HingeType type, string raw)[]
     {
         (HingeType.Hinge4BB_R14, "4BB-R14"),
-        (HingeType.HingeEB_755, "EB 755"),
+        (HingeType.HingeCEMOM_EB_755, "EB 755"),
         (HingeType.HingeOTLAV_30x120, "ОТLAV 30 х 120"),
         (HingeType.HingeR_10_102x76, "R-10 102x76"),
     };

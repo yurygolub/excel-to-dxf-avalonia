@@ -6,8 +6,8 @@ public enum HingeType
 {
     Undefined,
 
-    [Description("EB 755")]
-    HingeEB_755,
+    [Description("CEMOM EB 755")]
+    HingeCEMOM_EB_755,
 
     [Description("R-10 102x76")]
     HingeR_10_102x76,
