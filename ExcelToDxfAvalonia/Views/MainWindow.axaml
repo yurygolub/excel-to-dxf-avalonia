@@ -8,7 +8,6 @@
         Title="ExcelToDxfAvalonia">
 
     <Window.Resources>
-        <conv:EnumToCollectionConverter x:Key="EnumToCollectionConverter"/>
         <conv:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
     </Window.Resources>
     
@@ -55,6 +54,7 @@
                   VerticalScrollBarVisibility="Visible"
                   BorderBrush="Black"
                   BorderThickness="1"
+                  DoubleTapped="DataGrid_DoubleTapped"
                   IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Тип изделия"
