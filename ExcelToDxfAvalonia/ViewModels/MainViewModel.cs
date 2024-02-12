@@ -84,7 +84,7 @@ public class MainViewModel : ViewModelBase
 
         try
         {
-            this.model.ExportToDxf(this.exportFolderPath);
+            this.model.ExportToDxf(this.exportFolderPath, this.SelectedProducts.OfType<ProductInformation>());
         }
         catch (Exception ex)
         {
