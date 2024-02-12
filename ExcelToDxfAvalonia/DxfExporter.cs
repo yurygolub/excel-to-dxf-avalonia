@@ -117,7 +117,11 @@ public class DxfExporter
                 break;
         }
 
-        static void AddHingeAmount(Action<DrawingEntities, Vector2> addHinge, DrawingEntities entities, Vector2 leftBottom, ProductInformation product)
+        static void AddHingeAmount(
+            Action<DrawingEntities, Vector2, ProductInformation> addHinge,
+            DrawingEntities entities,
+            Vector2 leftBottom,
+            ProductInformation product)
         {
             const int BottomOffset = 256;
             const int UpOffset = 313;
@@ -125,28 +129,34 @@ public class DxfExporter
 
             if (product.HingeAmount == 4)
             {
-                addHinge(entities, new Vector2(leftBottom.X, leftBottom.Y + product.JambLength - (UpOffset + DistanceBetweenHinges + DistanceBetweenHinges)));
+                addHinge(
+                    entities,
+                    new Vector2(leftBottom.X, leftBottom.Y + product.JambLength - (UpOffset + DistanceBetweenHinges + DistanceBetweenHinges)),
+                    product);
             }
 
             if (product.HingeAmount >= 3)
             {
-                addHinge(entities, new Vector2(leftBottom.X, leftBottom.Y + product.JambLength - (UpOffset + DistanceBetweenHinges)));
+                addHinge(
+                    entities,
+                    new Vector2(leftBottom.X, leftBottom.Y + product.JambLength - (UpOffset + DistanceBetweenHinges)),
+                    product);
             }
 
             if (product.HingeAmount >= 2)
             {
-                addHinge(entities, new Vector2(leftBottom.X, leftBottom.Y + product.JambLength - UpOffset));
-                addHinge(entities, new Vector2(leftBottom.X, leftBottom.Y + BottomOffset));
+                addHinge(entities, new Vector2(leftBottom.X, leftBottom.Y + product.JambLength - UpOffset), product);
+                addHinge(entities, new Vector2(leftBottom.X, leftBottom.Y + BottomOffset), product);
             }
         }
 
-        static void AddHingeCEMOM_EB_755(DrawingEntities entities, Vector2 leftCenter)
+        static void AddHingeCEMOM_EB_755(DrawingEntities entities, Vector2 leftCenter, ProductInformation product)
         {
             const double Width = 4.2;
             const double Length = 35;
             const double LeftHingeOffset = 33.7;
             const double LeftCircleOffset = 67.3;
-            const double Radius = 8.5;
+            const double Radius = 8.5 / 2;
 
             Vector2 hingeLeftBottom = new Vector2(leftCenter.X + LeftHingeOffset, leftCenter.Y - (Length / 2));
 
@@ -156,7 +166,7 @@ public class DxfExporter
             entities.Add(new Circle(center, Radius));
         }
 
-        static void AddHingeR_10_102x76(DrawingEntities entities, Vector2 leftCenter)
+        static void AddHingeR_10_102x76(DrawingEntities entities, Vector2 leftCenter, ProductInformation product)
         {
             const double Width = 29.6;
             const double Length = 102.5;
@@ -180,7 +190,7 @@ public class DxfExporter
             entities.Add(new Arc(new Vector2(hingeLeftBottom.X + (Width - Radius), hingeLeftBottom.Y + Radius), Radius, 270, 360));
         }
 
-        static void AddHinge4BB_R14(DrawingEntities entities, Vector2 leftCenter)
+        static void AddHinge4BB_R14(DrawingEntities entities, Vector2 leftCenter, ProductInformation product)
         {
             const double Width = 28.6;
             const double Length = 100.5;
@@ -204,14 +214,32 @@ public class DxfExporter
             entities.Add(new Arc(new Vector2(hingeLeftBottom.X + (Width - Radius), hingeLeftBottom.Y + Radius), Radius, 270, 360));
         }
 
-        static void AddHingeOTLAV_30x120(DrawingEntities entities, Vector2 leftCenter)
+        static void AddHingeOTLAV_30x120(DrawingEntities entities, Vector2 leftCenter, ProductInformation product)
         {
             const double Width = 30.4;
             const double Length = 102.4;
-            const double LeftOffset = 57.5;
             const double Radius = Width / 2;
 
-            Vector2 hingeLeftBottom = new Vector2(leftCenter.X + LeftOffset, leftCenter.Y - (Length / 2));
+            double leftOffset;
+
+            switch (product.QuarterType)
+            {
+                case QuarterType.Quarter51:
+                case QuarterType.Quarter53:
+                    leftOffset = 58.5;
+                    break;
+
+                case QuarterType.Quarter55:
+                case QuarterType.Quarter61:
+                case QuarterType.Quarter63:
+                    leftOffset = 57.5;
+                    break;
+
+                default:
+                    return;
+            }
+
+            Vector2 hingeLeftBottom = new Vector2(leftCenter.X + leftOffset, leftCenter.Y - (Length / 2));
             Vector2 hingeLeftUp = new Vector2(hingeLeftBottom.X, hingeLeftBottom.Y + Length);
 
             entities.Add(new Line(

@@ -6,14 +6,14 @@ using PropertyChanged;
 namespace ExcelToDxfAvalonia.Views;
 
 [DoNotNotify]
-public partial class AboutView : Window
+public partial class EditView : Window
 {
-    public AboutView()
+    public EditView()
     {
         this.InitializeComponent();
     }
 
-    public AboutView(AboutViewModel viewModel)
+    public EditView(EditViewModel viewModel)
         : this()
     {
         this.DataContext = viewModel ?? throw new ArgumentNullException(nameof(viewModel));

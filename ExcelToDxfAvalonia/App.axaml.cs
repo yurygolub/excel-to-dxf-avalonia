@@ -8,9 +8,11 @@ using ExcelToDxfAvalonia.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
+using PropertyChanged;
 
 namespace ExcelToDxfAvalonia;
 
+[DoNotNotify]
 public partial class App : Application
 {
     private readonly Startup startup = new ();

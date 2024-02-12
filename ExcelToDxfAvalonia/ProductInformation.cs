@@ -1,7 +1,13 @@
-﻿namespace ExcelToDxfAvalonia;
+﻿using System.ComponentModel;
 
-public class ProductInformation
+namespace ExcelToDxfAvalonia;
+
+#pragma warning disable CS0067
+
+public class ProductInformation : INotifyPropertyChanged
 {
+    public event PropertyChangedEventHandler PropertyChanged;
+
     public string ProductType { get; set; }
 
     public QuarterType QuarterType { get; set; }

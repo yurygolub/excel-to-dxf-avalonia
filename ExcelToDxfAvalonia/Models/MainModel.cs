@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Runtime.InteropServices;
 using ExcelToDxfAvalonia.Extensions;
 
@@ -42,8 +44,23 @@ public class MainModel
         this.productInfoCollection.AddRange(this.excelParser.ReadExcelFile(filePath));
     }
 
-    public void ExportToDxf(string directoryPath)
+    public void ExportToDxf(string directoryPath, IEnumerable<ProductInformation> selected)
     {
-        this.dxfExporter.ExportToDxf(directoryPath, this.productInfoCollection);
+        List<ProductInformation> selectedList = selected.ToList();
+        this.dxfExporter.ExportToDxf(directoryPath, selectedList.Count != 0 ? selectedList : this.productInfoCollection);
+    }
+
+    public void AddProduct(ProductInformation product)
+    {
+        _ = product ?? throw new ArgumentNullException(nameof(product));
+
+        this.productInfoCollection.Add(product);
+    }
+
+    public void RemoveProduct(ProductInformation product)
+    {
+        _ = product ?? throw new ArgumentNullException(nameof(product));
+
+        this.productInfoCollection.Remove(product);
     }
 }

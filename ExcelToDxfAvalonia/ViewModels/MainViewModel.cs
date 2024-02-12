@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -37,7 +39,13 @@ public class MainViewModel : ViewModelBase
 
     public ReadOnlyObservableCollection<ProductInformation> ProductInfoCollection => this.model.ProductInfoPublicCollection;
 
+    public ProductInformation SelectedProduct { get; set; }
+
+    public IList SelectedProducts { get; set; }
+
     public string FileName { get; set; }
+
+    public bool IsButtonsEnabled => this.SelectedProduct is not null;
 
     public void SwitchConsoleVisibility() => MainModel.SwitchConsoleVisibility();
 
@@ -76,13 +84,41 @@ public class MainViewModel : ViewModelBase
 
         try
         {
-            this.model.ExportToDxf(this.exportFolderPath);
+            this.model.ExportToDxf(this.exportFolderPath, this.SelectedProducts.OfType<ProductInformation>());
         }
         catch (Exception ex)
         {
             this.logger.LogError(ex, "Unhandled exception:");
             await this.OpenDialog("Ошибка", $"Возникла ошибка при экспорте dxf файла{Environment.NewLine}{ex.Message}");
         }
+    }
+
+    public async Task AddNewProductAsync()
+    {
+        MainWindow owner = this.serviceProvider.GetRequiredService<MainWindow>();
+        var viewModel = new EditViewModel { Product = new ProductInformation() };
+        var editView = new EditView(viewModel);
+        await editView.ShowDialog(owner);
+
+        this.model.AddProduct(viewModel.Product);
+    }
+
+    public void EditSelectedProductAsync()
+    {
+        if (this.SelectedProduct is not null)
+        {
+            MainWindow owner = this.serviceProvider.GetRequiredService<MainWindow>();
+            var viewModel = new EditViewModel { Product = this.SelectedProduct };
+            var editView = new EditView(viewModel);
+            editView.ShowDialog(owner);
+        }
+    }
+
+    public void RemoveSelectedProducts()
+    {
+        this.SelectedProducts.OfType<ProductInformation>()
+            .ToList()
+            .ForEach(this.model.RemoveProduct);
     }
 
     public void OpenAboutWindow()
