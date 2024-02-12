@@ -156,7 +156,7 @@ public class DxfExporter
             const double Length = 35;
             const double LeftHingeOffset = 33.7;
             const double LeftCircleOffset = 67.3;
-            const double Radius = 8.5;
+            const double Radius = 8.5 / 2;
 
             Vector2 hingeLeftBottom = new Vector2(leftCenter.X + LeftHingeOffset, leftCenter.Y - (Length / 2));
 
