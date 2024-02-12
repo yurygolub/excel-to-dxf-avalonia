@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:conv="clr-namespace:ExcelToDxfAvalonia.Converters"
         mc:Ignorable="d" Width="400" Height="600"
+        WindowStartupLocation="CenterOwner"
         x:Class="ExcelToDxfAvalonia.Views.EditView"
         Name="EditViewControl"
         Title="Редактировать">
@@ -20,148 +21,151 @@
 
     <Window.Styles>
         <Style Selector="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="5"/>
-            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Padding" Value="5, 0"/>
         </Style>
         <Style Selector="TextBox">
+            <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="5"/>
-            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Padding" Value="5, 0"/>
         </Style>
         <Style Selector="TextBlock.combobox">
+            <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="0"/>
             <Setter Property="Padding" Value="0"/>
         </Style>
         <Style Selector="ComboBox">
+            <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="5"/>
-            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Padding" Value="5, 0"/>
         </Style>
     </Window.Styles>
-    
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        
-        <TextBlock Grid.Row="0" Grid.Column="0"
-                   Text="Четверть"/>
-        
-        <ComboBox Grid.Row="0" Grid.Column="1"
-                  ItemsSource="{Binding Product.QuarterType, Converter={StaticResource EnumToCollectionConverter}}"
-                  SelectedItem="{Binding Product.QuarterType}"
-                  VerticalAlignment="Center">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Classes="combobox"
-                               Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
-        
-        <TextBlock Grid.Row="1" Grid.Column="0"
-                   Text="Тип петли"/>
 
-        <ComboBox Grid.Row="1" Grid.Column="1"
-                  ItemsSource="{Binding Product.HingeType, Converter={StaticResource EnumToCollectionConverter}}"
-                  SelectedItem="{Binding Product.HingeType}"
-                  VerticalAlignment="Center">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Classes="combobox"
-                               Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
-        
-        <TextBlock Grid.Row="2" Grid.Column="0"
-                   Text="Количество петель"/>
+    <ScrollViewer>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-        <TextBox Grid.Row="2" Grid.Column="1"
-                 Text="{Binding Product.HingeAmount}"/>
-        
-        <TextBlock Grid.Row="3" Grid.Column="0"
-                   Text="Количество створок"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <TextBox Grid.Row="3" Grid.Column="1"
-                 Text="{Binding Product.LeafAmount}"/>
-        
-        <TextBlock Grid.Row="4" Grid.Column="0"
-                   Text="Тип замка"/>
+            <TextBlock Grid.Row="0" Grid.Column="0"
+                       Text="Четверть"/>
 
-        <ComboBox Grid.Row="4" Grid.Column="1"
-                  ItemsSource="{Binding Product.LockType, Converter={StaticResource EnumToCollectionConverter}}"
-                  SelectedItem="{Binding Product.LockType}"
-                  VerticalAlignment="Center">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Classes="combobox"
-                               Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
+            <ComboBox Grid.Row="0" Grid.Column="1"
+                      ItemsSource="{Binding Product.QuarterType, Converter={StaticResource EnumToCollectionConverter}, Mode=OneTime}"
+                      SelectedItem="{Binding Product.QuarterType}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Classes="combobox"
+                                   Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-        <TextBlock Grid.Row="5" Grid.Column="0"
-                   Text="Ширина стоевых"/>
+            <TextBlock Grid.Row="1" Grid.Column="0"
+                       Text="Тип петли"/>
 
-        <TextBox Grid.Row="5" Grid.Column="1"
-                 Text="{Binding Product.JambWidth}"/>
-        
-        <TextBlock Grid.Row="6" Grid.Column="0"
-                   Text="Длина стоевых"/>
+            <ComboBox Grid.Row="1" Grid.Column="1"
+                      ItemsSource="{Binding Product.HingeType, Converter={StaticResource EnumToCollectionConverter}, Mode=OneTime}"
+                      SelectedItem="{Binding Product.HingeType}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Classes="combobox"
+                                   Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-        <TextBox Grid.Row="6" Grid.Column="1"
-                 Text="{Binding Product.JambLength}"/>
-        
-        <TextBlock Grid.Row="7" Grid.Column="0"
-                   Text="Ширина обечайки стоевых"/>
+            <TextBlock Grid.Row="2" Grid.Column="0"
+                       Text="Количество петель"/>
 
-        <TextBox Grid.Row="7" Grid.Column="1"
-                 Text="{Binding Product.InnerJambWidth}"/>
-        
-        <TextBlock Grid.Row="8" Grid.Column="0"
-                   Text="Длина обечайки стоевых"/>
+            <TextBox Grid.Row="2" Grid.Column="1"
+                     Text="{Binding Product.HingeAmount}"/>
 
-        <TextBox Grid.Row="8" Grid.Column="1"
-                 Text="{Binding Product.InnerJambLength}"/>
-        
-        <TextBlock Grid.Row="9" Grid.Column="0"
-                   Text="Ширина перемычки"/>
+            <TextBlock Grid.Row="3" Grid.Column="0"
+                       Text="Количество створок"/>
 
-        <TextBox Grid.Row="9" Grid.Column="1"
-                 Text="{Binding Product.LintelWidth}"/>
-        
-        <TextBlock Grid.Row="10" Grid.Column="0"
-                   Text="Длина перемычки"/>
+            <TextBox Grid.Row="3" Grid.Column="1"
+                     Text="{Binding Product.LeafAmount}"/>
 
-        <TextBox Grid.Row="10" Grid.Column="1"
-                 Text="{Binding Product.LintelLength}"/>
-        
-        <TextBlock Grid.Row="11" Grid.Column="0"
-                   Text="Ширина обечайки перемычки"/>
+            <TextBlock Grid.Row="4" Grid.Column="0"
+                       Text="Тип замка"/>
 
-        <TextBox Grid.Row="11" Grid.Column="1"
-                 Text="{Binding Product.InnerLintelWidth}"/>
-        
-        <TextBlock Grid.Row="12" Grid.Column="0"
-                   Text="Длина обечайки перемычки"/>
+            <ComboBox Grid.Row="4" Grid.Column="1"
+                      ItemsSource="{Binding Product.LockType, Converter={StaticResource EnumToCollectionConverter}, Mode=OneTime}"
+                      SelectedItem="{Binding Product.LockType}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Classes="combobox"
+                                   Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-        <TextBox Grid.Row="12" Grid.Column="1"
-                 Text="{Binding Product.InnerLintelLength}"/>
-    </Grid>
+            <TextBlock Grid.Row="5" Grid.Column="0"
+                       Text="Ширина стоевых"/>
+
+            <TextBox Grid.Row="5" Grid.Column="1"
+                     Text="{Binding Product.JambWidth}"/>
+
+            <TextBlock Grid.Row="6" Grid.Column="0"
+                       Text="Длина стоевых"/>
+
+            <TextBox Grid.Row="6" Grid.Column="1"
+                     Text="{Binding Product.JambLength}"/>
+
+            <TextBlock Grid.Row="7" Grid.Column="0"
+                       Text="Ширина обечайки стоевых"/>
+
+            <TextBox Grid.Row="7" Grid.Column="1"
+                     Text="{Binding Product.InnerJambWidth}"/>
+
+            <TextBlock Grid.Row="8" Grid.Column="0"
+                       Text="Длина обечайки стоевых"/>
+
+            <TextBox Grid.Row="8" Grid.Column="1"
+                     Text="{Binding Product.InnerJambLength}"/>
+
+            <TextBlock Grid.Row="9" Grid.Column="0"
+                       Text="Ширина перемычки"/>
+
+            <TextBox Grid.Row="9" Grid.Column="1"
+                     Text="{Binding Product.LintelWidth}"/>
+
+            <TextBlock Grid.Row="10" Grid.Column="0"
+                       Text="Длина перемычки"/>
+
+            <TextBox Grid.Row="10" Grid.Column="1"
+                     Text="{Binding Product.LintelLength}"/>
+
+            <TextBlock Grid.Row="11" Grid.Column="0"
+                       Text="Ширина обечайки перемычки"/>
+
+            <TextBox Grid.Row="11" Grid.Column="1"
+                     Text="{Binding Product.InnerLintelWidth}"/>
+
+            <TextBlock Grid.Row="12" Grid.Column="0"
+                       Text="Длина обечайки перемычки"/>
+
+            <TextBox Grid.Row="12" Grid.Column="1"
+                     Text="{Binding Product.InnerLintelLength}"/>
+        </Grid>
+    </ScrollViewer>
 </Window>

@@ -2,7 +2,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:conv="clr-namespace:ExcelToDxfAvalonia.Converters"
+        xmlns:ext="clr-namespace:ExcelToDxfAvalonia.Extensions;assembly=ExcelToDxfAvalonia"
+        xmlns:conv="clr-namespace:ExcelToDxfAvalonia.Converters;assembly=ExcelToDxfAvalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="ExcelToDxfAvalonia.Views.MainWindow"
         Title="ExcelToDxfAvalonia">
@@ -16,6 +17,14 @@
                     Command="{Binding SwitchConsoleVisibility}"/>
         <KeyBinding Gesture="Ctrl+O"
                     Command="{Binding OpenFileAsync}"/>
+        <KeyBinding Gesture="Ctrl+E"
+                    Command="{Binding ExportToDxfAsync}"/>
+        <KeyBinding Gesture="Ctrl+Shift+A"
+                    Command="{Binding AddNewProductAsync}"/>
+        <KeyBinding Gesture="Delete"
+                    Command="{Binding RemoveSelectedProducts}"/>
+        <KeyBinding Gesture="Shift+Enter"
+                    Command="{Binding EditSelectedProductAsync}"/>
     </Window.KeyBindings>
 
     <Window.Styles>
@@ -31,12 +40,30 @@
         </Grid.RowDefinitions>
 
         <Menu Grid.Row="0">
-            <MenuItem Header="Открыть файл"
+            <MenuItem Header="Файл">
+                <MenuItem Header="Открыть файл Ctrl+O"
                       Command="{Binding OpenFileAsync}">
-            </MenuItem>
+                </MenuItem>
 
-            <MenuItem Header="Экспорт в dxf"
-                      Command="{Binding ExportToDxfAsync}">
+                <MenuItem Header="Экспорт в dxf Ctrl+E"
+                          Command="{Binding ExportToDxfAsync}">
+                </MenuItem>
+            </MenuItem>
+            
+            <MenuItem Header="Редактировать">
+                <MenuItem Header="Добавить Ctrl+Shift+A"
+                          Command="{Binding AddNewProductAsync}">
+                </MenuItem>
+
+                <MenuItem Header="Изменить"
+                          Command="{Binding EditSelectedProductAsync}"
+                          IsEnabled="{Binding IsButtonsEnabled}">
+                </MenuItem>
+
+                <MenuItem Header="Удалить Delete"
+                          Command="{Binding RemoveSelectedProducts}"
+                          IsEnabled="{Binding IsButtonsEnabled}">
+                </MenuItem>
             </MenuItem>
 
             <MenuItem Header="Версия"
@@ -45,7 +72,9 @@
         </Menu>
 
         <DataGrid Grid.Row="1"
+                  Name="myDataGrid"
                   ItemsSource="{Binding ProductInfoCollection}"
+                  SelectedItem="{Binding SelectedProduct}"
                   GridLinesVisibility="All"
                   AutoGenerateColumns="False"
                   HorizontalGridLinesBrush="Black"

@@ -46,4 +46,18 @@ public class MainModel
     {
         this.dxfExporter.ExportToDxf(directoryPath, this.productInfoCollection);
     }
+
+    public void AddProduct(ProductInformation product)
+    {
+        _ = product ?? throw new ArgumentNullException(nameof(product));
+
+        this.productInfoCollection.Add(product);
+    }
+
+    public void RemoveProduct(ProductInformation product)
+    {
+        _ = product ?? throw new ArgumentNullException(nameof(product));
+
+        this.productInfoCollection.Remove(product);
+    }
 }

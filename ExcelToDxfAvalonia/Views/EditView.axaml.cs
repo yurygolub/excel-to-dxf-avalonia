@@ -1,9 +1,11 @@
 ﻿using System;
 using Avalonia.Controls;
 using ExcelToDxfAvalonia.ViewModels;
+using PropertyChanged;
 
 namespace ExcelToDxfAvalonia.Views;
 
+[DoNotNotify]
 public partial class EditView : Window
 {
     public EditView()
