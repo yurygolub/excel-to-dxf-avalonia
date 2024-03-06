@@ -217,7 +217,7 @@ public class DxfExporter
         static void AddHingeOTLAV_30x120(DrawingEntities entities, Vector2 leftCenter, ProductInformation product)
         {
             const double Width = 30.4;
-            const double Length = 102.4;
+            const double Length = 120.4;
             const double Radius = Width / 2;
 
             double leftOffset;
