@@ -168,7 +168,7 @@ public class DxfExporter
 
         static void AddHingeR_10_102x76(DrawingEntities entities, Vector2 leftCenter, ProductInformation product)
         {
-            const double Width = 29.6;
+            const double Width = 30.9;
             const double Length = 102.5;
             const double LeftOffset = 50;
             const double Radius = 10;
