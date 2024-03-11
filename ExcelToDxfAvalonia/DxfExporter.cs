@@ -12,7 +12,7 @@ public class DxfExporter
     public void ExportToDxf(string directoryPath, IEnumerable<ProductInformation> products)
     {
         Directory.CreateDirectory(directoryPath);
-        int counter = 0;
+        int counter = 1;
         foreach (ProductInformation product in products)
         {
             string filePath = Path.Combine(directoryPath, $"{counter} - {product.ProductType}.dxf");
