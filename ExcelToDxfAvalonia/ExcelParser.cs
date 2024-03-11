@@ -91,6 +91,7 @@ public class ExcelParser
 
             products.Add(new ProductInformation
             {
+                Number = products.Count + 1,
                 ProductType = productType,
                 QuarterType = ParseQuarterType(notes[QuarterIndex]),
                 QuarterTypeRaw = notes[QuarterIndex],

@@ -8,6 +8,8 @@ public class ProductInformation : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler PropertyChanged;
 
+    public int Number { get; set; }
+
     public string ProductType { get; set; }
 
     public QuarterType QuarterType { get; set; }

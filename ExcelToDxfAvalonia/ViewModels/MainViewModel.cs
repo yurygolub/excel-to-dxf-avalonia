@@ -100,6 +100,7 @@ public class MainViewModel : ViewModelBase
         var editView = new EditView(viewModel);
         await editView.ShowDialog(owner);
 
+        viewModel.Product.Number = this.ProductInfoCollection.Count + 1;
         this.model.AddProduct(viewModel.Product);
     }
 
@@ -119,6 +120,11 @@ public class MainViewModel : ViewModelBase
         this.SelectedProducts.OfType<ProductInformation>()
             .ToList()
             .ForEach(this.model.RemoveProduct);
+
+        for (int i = 0; i < this.ProductInfoCollection.Count; i++)
+        {
+            this.ProductInfoCollection[i].Number = i + 1;
+        }
     }
 
     public void OpenAboutWindow()
