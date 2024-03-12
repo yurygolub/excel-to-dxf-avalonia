@@ -47,14 +47,6 @@ public class ExcelParser
     public IEnumerable<ProductInformation> ReadExcelFile(string filePath)
     {
         const int HeaderRowsCount = 4;
-        const int ProductTypeIndex = 2;
-        const int QuarterIndex = 2;
-        const int LeftHingeAmountIndex = 10;
-        const int RightHingeAmountIndex = 11;
-        const int LeafAmountIndex = 12;
-        const int NotesIndex = 14;
-        const int WidthIndex = 15;
-        const int LengthIndex = 16;
 
         using FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
 
@@ -74,46 +66,103 @@ public class ExcelParser
         var products = new List<ProductInformation>();
 
         const int RowStep = 5;
-        for (int i = 0; i < rows.Length - 3; i += RowStep)
+        int i = 0;
+        while (i < rows.Length - 3)
         {
-            DataRow row1 = rows[i];
-            DataRow row2 = rows[i + 1];
-            DataRow row3 = rows[i + 2];
-            DataRow row4 = rows[i + 3];
+            object[] row1 = rows[i]?.ItemArray;
+            object[] row2 = rows[i + 1]?.ItemArray;
+            object[] row3 = rows[i + 2]?.ItemArray;
+            object[] row4 = rows[i + 3]?.ItemArray;
 
-            string productType = row1[ProductTypeIndex].ToString();
-            if (string.IsNullOrWhiteSpace(productType))
+            ProductInformation product = ParseProduct(products.Count + 1, row1, row2, row3, row4);
+            if (product is null)
             {
+                i++;
                 continue;
             }
 
-            string[] notes = row1[NotesIndex].ToString().Split('*');
-
-            products.Add(new ProductInformation
-            {
-                Number = products.Count + 1,
-                ProductType = productType,
-                QuarterType = ParseQuarterType(notes[QuarterIndex]),
-                QuarterTypeRaw = notes[QuarterIndex],
-                HingeType = ParseHingeType(notes, out string hingeTypeRaw),
-                HingeTypeRaw = hingeTypeRaw,
-                HingeAmount = ParseHingeAmount(row1[LeftHingeAmountIndex], row1[RightHingeAmountIndex]),
-                LeafAmount = ParseDoorLeafAmount(row1[LeafAmountIndex]),
-                LockType = ParseLockType(notes, out string lockTypeRaw),
-                LockTypeRaw = lockTypeRaw,
-                Notes = notes.Aggregate(new StringBuilder(), (acc, i) => acc.AppendLine(i)).ToString(),
-                JambWidth = (int)(double)row1[WidthIndex],
-                JambLength = (int)(double)row1[LengthIndex],
-                InnerJambWidth = (int?)(row2[WidthIndex] is DBNull ? null : (double?)row2[WidthIndex]),
-                InnerJambLength = (int?)(row2[LengthIndex] is DBNull ? null : (double?)row2[LengthIndex]),
-                LintelWidth = (int)(double)row3[WidthIndex],
-                LintelLength = (int)(double)row3[LengthIndex],
-                InnerLintelWidth = (int?)(row4[WidthIndex] is DBNull ? null : (double?)row4[WidthIndex]),
-                InnerLintelLength = (int?)(row4[LengthIndex] is DBNull ? null : (double?)row4[LengthIndex]),
-            });
+            products.Add(product);
+            i += RowStep;
         }
 
         return products;
+    }
+
+    private static ProductInformation ParseProduct(int number, object[] row1, object[] row2, object[] row3, object[] row4)
+    {
+        const int ProductTypeIndex = 2;
+        const int QuarterIndex = 2;
+        const int LeftHingeAmountIndex = 10;
+        const int RightHingeAmountIndex = 11;
+        const int LeafAmountIndex = 12;
+        const int NotesIndex = 14;
+        const int WidthIndex = 15;
+        const int LengthIndex = 16;
+
+        if (row1 is null ||
+            row2 is null ||
+            row3 is null ||
+            row4 is null)
+        {
+            return null;
+        }
+
+        if (row1.Length <= LengthIndex ||
+            row2.Length <= LengthIndex ||
+            row3.Length <= LengthIndex ||
+            row4.Length <= LengthIndex)
+        {
+            return null;
+        }
+
+        string[] notes = row1[NotesIndex].ToString().Split('*');
+
+        if (notes.Length <= QuarterIndex)
+        {
+            return null;
+        }
+
+        string quarterTypeRaw = notes[QuarterIndex];
+
+        int? jambWidth = Parse(row1[WidthIndex]);
+        int? jambLength = Parse(row1[LengthIndex]);
+        int? lintelWidth = Parse(row3[WidthIndex]);
+        int? lintelLength = Parse(row3[LengthIndex]);
+
+        if (!jambWidth.HasValue ||
+            !jambLength.HasValue ||
+            !lintelWidth.HasValue ||
+            !lintelLength.HasValue)
+        {
+            return null;
+        }
+
+        return new ProductInformation
+        {
+            Number = number,
+            ProductType = row1[ProductTypeIndex].ToString(),
+            QuarterType = ParseQuarterType(quarterTypeRaw),
+            QuarterTypeRaw = quarterTypeRaw,
+            HingeType = ParseHingeType(notes, out string hingeTypeRaw),
+            HingeTypeRaw = hingeTypeRaw,
+            HingeAmount = ParseHingeAmount(row1[LeftHingeAmountIndex], row1[RightHingeAmountIndex]),
+            LeafAmount = ParseDoorLeafAmount(row1[LeafAmountIndex]),
+            LockType = ParseLockType(notes, out string lockTypeRaw),
+            LockTypeRaw = lockTypeRaw,
+            JambWidth = jambWidth.Value,
+            JambLength = jambLength.Value,
+            InnerJambWidth = Parse(row2[WidthIndex]),
+            InnerJambLength = Parse(row2[LengthIndex]),
+            LintelWidth = lintelWidth.Value,
+            LintelLength = lintelLength.Value,
+            InnerLintelWidth = Parse(row4[WidthIndex]),
+            InnerLintelLength = Parse(row4[LengthIndex]),
+        };
+
+        static int? Parse(object value)
+        {
+            return value is double casted ? (int)casted : null;
+        }
     }
 
     private static QuarterType ParseQuarterType(string quarterTypeRaw)

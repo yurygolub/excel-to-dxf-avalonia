@@ -44,8 +44,6 @@ public class ProductInformation : INotifyPropertyChanged
 
     public int? InnerLintelWidth { get; set; }
 
-    public string Notes { get; set; }
-
     public override string ToString()
     {
         return $"{this.ProductType} {this.QuarterType} {this.HingeType} {this.LockType}";

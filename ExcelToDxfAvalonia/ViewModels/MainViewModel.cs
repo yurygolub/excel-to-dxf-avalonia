@@ -9,13 +9,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
+using ExcelToDxfAvalonia.Extensions;
 using ExcelToDxfAvalonia.Models;
 using ExcelToDxfAvalonia.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using MsBox.Avalonia;
-using MsBox.Avalonia.Base;
-using MsBox.Avalonia.Enums;
 
 namespace ExcelToDxfAvalonia.ViewModels;
 
@@ -53,31 +51,31 @@ public class MainViewModel : ViewModelBase
     {
         var filters = new List<FilePickerFileType>
         {
-            new FilePickerFileType("Excel file (*.xlsx)")
+            new FilePickerFileType("Файл excel (*.xls; *.xlsx)")
             {
-                Patterns = new List<string> { "*.xlsx" },
+                Patterns = new List<string> { "*.xls", "*.xlsx" },
             },
         };
 
-        if (!await this.OpenFileAsync("Open excel file", filters))
+        if (!await this.OpenFileAsync("Открыть файл excel", filters))
         {
             return;
         }
 
         try
         {
-            this.model.ReadExcelFile(this.inFilePath);
+            await this.model.ReadExcelFile(this.inFilePath);
         }
         catch (Exception ex)
         {
             this.logger.LogError(ex, "Unhandled exception:");
-            await this.OpenDialog("Ошибка", $"Возникла ошибка при чтении excel файла{Environment.NewLine}{ex.Message}");
+            await Helper.OpenDialog("Ошибка", $"Возникла ошибка при чтении excel файла{Environment.NewLine}{ex.Message}");
         }
     }
 
     public async Task ExportToDxfAsync()
     {
-        if (!await this.OpenFolderAsync("Open directory"))
+        if (!await this.OpenFolderAsync("Выбрать папку"))
         {
             return;
         }
@@ -89,7 +87,7 @@ public class MainViewModel : ViewModelBase
         catch (Exception ex)
         {
             this.logger.LogError(ex, "Unhandled exception:");
-            await this.OpenDialog("Ошибка", $"Возникла ошибка при экспорте dxf файла{Environment.NewLine}{ex.Message}");
+            await Helper.OpenDialog("Ошибка", $"Возникла ошибка при экспорте dxf файла{Environment.NewLine}{ex.Message}");
         }
     }
 
@@ -144,7 +142,7 @@ public class MainViewModel : ViewModelBase
 
     private async Task<bool> OpenFileAsync(string title, List<FilePickerFileType> filters)
     {
-        filters.Add(new FilePickerFileType("All files (*.*)")
+        filters.Add(new FilePickerFileType("Все файлы (*.*)")
         {
             Patterns = new List<string> { "*.*" },
         });
@@ -197,14 +195,5 @@ public class MainViewModel : ViewModelBase
         }
 
         return false;
-    }
-
-    private async Task OpenDialog(string title, string message)
-    {
-        IMsBox<ButtonResult> box = MessageBoxManager.GetMessageBoxStandard(title, message, ButtonEnum.Ok);
-        if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            await box.ShowWindowDialogAsync(desktop.MainWindow);
-        }
     }
 }

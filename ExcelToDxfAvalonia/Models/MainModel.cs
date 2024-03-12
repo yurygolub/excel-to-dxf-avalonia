@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using ExcelToDxfAvalonia.Extensions;
 
 namespace ExcelToDxfAvalonia.Models;
@@ -38,10 +39,17 @@ public class MainModel
         }
     }
 
-    public void ReadExcelFile(string filePath)
+    public async Task ReadExcelFile(string filePath)
     {
+        IEnumerable<ProductInformation> products = this.excelParser.ReadExcelFile(filePath);
+        if (!products.Any())
+        {
+            await Helper.OpenDialog("Сообщение", "Не удалось прочитать ни одной записи");
+            return;
+        }
+
         this.productInfoCollection.Clear();
-        this.productInfoCollection.AddRange(this.excelParser.ReadExcelFile(filePath));
+        this.productInfoCollection.AddRange(products);
     }
 
     public void ExportToDxf(string directoryPath, IEnumerable<ProductInformation> selected)

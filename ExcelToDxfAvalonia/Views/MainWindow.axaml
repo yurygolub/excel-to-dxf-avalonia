@@ -55,7 +55,7 @@
                           Command="{Binding AddNewProductAsync}">
                 </MenuItem>
 
-                <MenuItem Header="Изменить"
+                <MenuItem Header="Изменить Shift+Enter"
                           Command="{Binding EditSelectedProductAsync}"
                           IsEnabled="{Binding IsButtonsEnabled}">
                 </MenuItem>
