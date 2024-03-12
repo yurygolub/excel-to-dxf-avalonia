@@ -55,11 +55,12 @@ public class ExcelParser
         // Auto-detect format, supports:
         //  - Binary Excel files (2.0-2003 format; *.xls)
         //  - OpenXml Excel files (2007 format; *.xlsx, *.xlsb)
-        using IExcelDataReader reader = ExcelReaderFactory.CreateReader(stream);
+        using IExcelDataReader reader = ExcelReaderFactory.CreateReader(stream, new ExcelReaderConfiguration
+        {
+            FallbackEncoding = Encoding.GetEncoding(1251),
+        });
 
         DataSet result = reader.AsDataSet();
-
-        Console.OutputEncoding = Encoding.UTF8;
 
         DataTable table = result.Tables.Cast<DataTable>().First();
         DataRow[] rows = table.Rows.Cast<DataRow>().Skip(HeaderRowsCount).ToArray();
@@ -161,7 +162,17 @@ public class ExcelParser
 
         static int? Parse(object value)
         {
-            return value is double casted ? (int)casted : null;
+            if (value is double casted)
+            {
+                return (int)casted;
+            }
+
+            if (int.TryParse(value?.ToString(), out int result))
+            {
+                return result;
+            }
+
+            return null;
         }
     }
 
