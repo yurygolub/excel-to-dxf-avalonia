@@ -39,6 +39,7 @@ public class ExcelParser
     private static readonly (LockType type, string raw)[] LockTypes = new (LockType type, string raw)[]
     {
         (LockType.BorderRoom, "Border Room"),
+        (LockType.BorderRoom, "AGB Mediana Evolution"),
         (LockType.LobZ7504, "Z7504"),
         (LockType.LobZ755, "Z755"),
         (LockType.LH25_50SN, "LH 25-50 SN"),
